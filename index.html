@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
         :root { --noir-malt: #0a0a0a; --or-deep: #C5A059; }
@@ -372,11 +374,32 @@
 
     // INITIALISATION BASE DE DONNÉES
 
-    let db = JSON.parse(localStorage.getItem('ecf_db_final_v11')) || { achats: [], ventes: [], logs: [], archives: [] };
+    // CONFIGURATION SUPABASE (À remplir avec tes accès)
+const SUPABASE_URL = "TON_URL_PROJET";
+const SUPABASE_KEY = "TON_API_KEY_ANON";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const save = () => { localStorage.setItem('ecf_db_final_v11', JSON.stringify(db)); refreshFinance(); };
+// Structure locale pour l'affichage fluide
+let db = { achats: [], ventes: [], logs: [], archives: [] };
 
+// Fonction pour charger les données depuis le Cloud au démarrage
+async function loadDataFromCloud() {
+    const { data: achats } = await supabase.from('achats').select('*');
+    const { data: ventes } = await supabase.from('ventes').select('*');
+    const { data: logs } = await supabase.from('logs').select('*');
+    const { data: archives } = await supabase.from('archives').select('*');
 
+    db.achats = achats || [];
+    db.ventes = ventes || [];
+    db.logs = logs || [];
+    db.archives = archives || [];
+
+    refreshFinance();
+    if(document.getElementById('nav-vente').classList.contains('active')) renderStockDropdown();
+}
+
+// Appeler le chargement au lancement
+loadDataFromCloud();
 
     // HORLOGE TEMPS RÉEL
 
