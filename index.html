@@ -3,250 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECF - Gestion Automobile Premium</title>
+    <title>ECF MOTORS | Système de Gestion de Prestige</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
     <style>
-        :root { --noir-malt: #1e1e1f; --or: #dda100; }
-        body { background-color: var(--noir-malt); color: #ffffff; font-family: 'Inter', sans-serif; }
-        
-        /* Vidéo de fond */
-        .video-bg {
-            position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%;
-            z-index: -1; opacity: 0.2; object-fit: cover;
+        :root {
+            --noir-carbone: #0f0f10;
+            --noir-malt: #1e1e1f;
+            --or-pur: #dda100;
+            --or-sombre: #a67c00;
         }
 
-        .gold-gradient { background: linear-gradient(135deg, #dda100 0%, #b8860b 100%); }
-        .card { background: rgba(30, 30, 31, 0.95); border: 1px solid rgba(221, 161, 0, 0.2); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        label { display: block; color: var(--or); font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
-        input, select { 
-            width: 100%; background: #2a2a2b; border: 1px solid #3f3f40; color: white; 
-            padding: 12px; border-radius: 6px; margin-bottom: 20px; transition: 0.3s;
+        body {
+            background-color: var(--noir-carbone);
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
-        input:focus { border-color: var(--or); outline: none; box-shadow: 0 0 8px rgba(221, 161, 0, 0.3); }
-        
-        .tab-btn { padding: 12px 24px; border-bottom: 3px solid transparent; cursor: pointer; transition: 0.3s; opacity: 0.6; }
-        .tab-btn.active { border-bottom-color: var(--or); opacity: 1; color: var(--or); }
-        
-        .table-header-custom { background-color: #2a2a2b !important; color: var(--or) !important; }
+
+        /* Arrière-plan Vidéo Immersif */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.2;
+            filter: grayscale(100%) brightness(0.5);
+        }
+
+        /* Glassmorphism Design */
+        .glass {
+            background: rgba(30, 30, 31, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(221, 161, 0, 0.1);
+            border-radius: 20px;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, var(--or-pur) 0%, var(--or-sombre) 100%);
+            color: black;
+            font-weight: 800;
+            transition: all 0.3s ease;
+        }
+
+        .gold-gradient:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(221, 161, 0, 0.3);
+        }
+
+        /* Formulaires Premium */
+        label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--or-pur);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            padding: 12px 16px !important;
+            border-radius: 10px !important;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--or-pur) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            outline: none;
+        }
+
+        /* Navigation */
+        .nav-btn {
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            transition: 0.4s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-btn.active {
+            opacity: 1;
+            color: var(--or-pur);
+            border-bottom: 2px solid var(--or-pur);
+        }
+
+        /* Tableaux */
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .custom-table tr {
+            background: rgba(255, 255, 255, 0.02);
+            transition: 0.3s;
+        }
+
+        .custom-table td {
+            padding: 16px;
+        }
+
+        .custom-table tr:hover {
+            background: rgba(221, 161, 0, 0.05);
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop class="video-bg">
+    <video autoplay muted loop playsinline class="video-bg">
         <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-car-parked-in-a-dark-garage-4355-large.mp4" type="video/mp4">
     </video>
 
-    <div class="container mx-auto px-4 py-6">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 bg-black/50 p-6 rounded-xl border-l-4 border-yellow-600">
-            <div class="mb-4 md:mb-0">
-                <div id="clock" class="text-gray-400 font-mono text-sm"></div>
-                <h1 class="text-4xl font-black tracking-tighter">ECF <span class="gold-text text-[#dda100]">MOTORS</span></h1>
+    <div class="p-4 md:p-10 max-w-[1600px] mx-auto">
+        
+        <header class="flex flex-col lg:flex-row justify-between items-center mb-12 gap-6">
+            <div class="text-center lg:text-left">
+                <p id="liveDate" class="text-xs font-mono opacity-60 uppercase tracking-tighter mb-2"></p>
+                <h1 class="text-5xl font-black tracking-tighter">ECF<span class="text-[#dda100] italic">MOTORS</span></h1>
+                <p class="text-[10px] tracking-[0.5em] opacity-40 uppercase">Gestion Automobile Haut de Gamme</p>
             </div>
-            <div class="flex gap-8 text-center">
-                <div><p class="text-xs text-gray-400">TOTAL SORTIES</p><p id="stat-sortie" class="text-xl font-bold text-red-500">0 FCFA</p></div>
-                <div><p class="text-xs text-gray-400">TOTAL ENTRÉES</p><p id="stat-entree" class="text-xl font-bold text-green-500">0 FCFA</p></div>
-                <div class="bg-[#dda100]/10 p-2 rounded"><p class="text-xs text-[#dda100]">BÉNÉFICE NET</p><p id="stat-benefice" class="text-xl font-bold text-[#dda100]">0 FCFA</p></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:w-auto">
+                <div class="glass px-8 py-4 border-l-4 border-red-600">
+                    <p class="text-[10px] opacity-50 uppercase font-bold">Total Sorties</p>
+                    <p id="statSortie" class="text-xl font-bold">0 FCFA</p>
+                </div>
+                <div class="glass px-8 py-4 border-l-4 border-green-600">
+                    <p class="text-[10px] opacity-50 uppercase font-bold">Total Entrées</p>
+                    <p id="statEntree" class="text-xl font-bold">0 FCFA</p>
+                </div>
+                <div class="glass px-8 py-4 border-l-4 border-[#dda100]">
+                    <p class="text-[10px] opacity-50 uppercase font-bold">Bénéfice Net</p>
+                    <p id="statBenefice" class="text-xl font-bold text-[#dda100]">0 FCFA</p>
+                </div>
             </div>
         </header>
 
-        <nav class="flex overflow-x-auto gap-2 mb-8 no-scrollbar bg-[#1a1a1b] p-2 rounded-lg">
-            <div onclick="showSection('achat')" class="tab-btn active" id="btn-achat">ACHAT</div>
-            <div onclick="showSection('vente')" class="tab-btn" id="btn-vente">VENTE</div>
-            <div onclick="showSection('encaissement')" class="tab-btn" id="btn-encaissement">ENCAISSEMENT</div>
-            <div onclick="showSection('archives')" class="tab-btn" id="btn-archives">ARCHIVES</div>
-            <div onclick="showSection('master')" class="tab-btn" id="btn-master">GESTION MASTER</div>
-            <div onclick="showSection('historique')" class="tab-btn" id="btn-historique">HISTORIQUE</div>
+        <nav class="glass p-2 flex flex-wrap justify-around mb-12 sticky top-4 z-50">
+            <button onclick="changeTab('achat', this)" class="nav-btn active">ACHAT</button>
+            <button onclick="changeTab('vente', this)" class="nav-btn">VENTE</button>
+            <button onclick="changeTab('encaissement', this)" class="nav-btn">ENCAS</button>
+            <button onclick="changeTab('archives', this)" class="nav-btn">ARCHIVES</button>
+            <button onclick="changeTab('master', this)" class="nav-btn">GESTION MASTER</button>
+            <button onclick="changeTab('historique', this)" class="nav-btn">HISTORIQUE</button>
         </nav>
 
-        <main>
-            <section id="sec-achat" class="card p-8 max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">🛒 Nouvel Achat</h2>
-                <form id="form-achat" class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-                    <div>
-                        <label>Marque du véhicule</label>
-                        <input type="text" id="a_marque" placeholder="Ex: Toyota Camry 2022" required>
-                        <label>Acheteur</label>
-                        <input type="text" id="a_acheteur" required>
-                        <label>Montant du véhicule (Prix de base)</label>
-                        <input type="number" id="a_prix" class="calc-achat" required>
-                    </div>
-                    <div>
-                        <label>Frais de réparation</label>
-                        <input type="number" id="a_reparation" class="calc-achat" value="0">
-                        <label>Transport & Logistique</label>
-                        <input type="number" id="a_transport" class="calc-achat" value="0">
-                        <label>Douane</label>
-                        <input type="number" id="a_douane" class="calc-achat" value="0">
-                        <label>Frais annexe à la Douane</label>
-                        <input type="number" id="a_annexe" class="calc-achat" value="0">
-                    </div>
-                    <div class="col-span-full bg-black/40 p-4 rounded-lg mt-4 border border-dashed border-yellow-600">
-                        <p class="text-center">COÛT D'ACQUISITION TOTAL : <span id="a_total_display" class="text-2xl font-bold text-[#dda100]">0</span> FCFA</p>
-                    </div>
-                    <button type="submit" class="col-span-full gold-gradient text-black font-black py-4 rounded-lg mt-6 hover:scale-[1.01] transition">ENREGISTRER & GÉNÉRER REÇU PDF</button>
-                </form>
-            </section>
-
-            <section id="sec-vente" class="hidden card p-8">
-                <h2 class="text-2xl font-bold mb-6">🤝 Nouvelle Vente</h2>
-                <form id="form-vente" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-1 border-r border-gray-800 pr-4">
-                        <h3 class="text-[#dda100] mb-4 underline">Infos Client</h3>
-                        <label>Nom & Prénoms</label><input type="text" id="v_nom" required>
-                        <label>Date & Lieu de Naissance</label><input type="text" id="v_naissance">
-                        <label>Contact</label><input type="text" id="v_contact">
-                        <label>Nationalité</label><input type="text" id="v_nationalite">
-                        <label>Profession</label><input type="text" id="v_profession">
-                        <label>Domicile</label><input type="text" id="v_domicile">
-                        <label>N° Pièce d'identité</label><input type="text" id="v_piece">
-                        <label>Délivrée le</label><input type="date" id="v_piece_date">
-                    </div>
-                    <div class="md:col-span-2">
-                        <h3 class="text-[#dda100] mb-4 underline">Détails Véhicule & Paiement</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label>Sélectionner le Véhicule</label>
-                                <select id="v_vehicule_id" required></select>
-                                <label>Type de vente</label>
-                                <select id="v_type" onchange="checkVenteType()">
-                                    <option value="soldé">SOLDÉ</option>
-                                    <option value="échelonné">ÉCHELONNÉ</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Montant de la vente</label>
-                                <input type="number" id="v_montant_total" required>
-                                <label>Mode de paiement</label>
-                                <select id="v_mode">
-                                    <option>Espèce</option><option>Chèque</option><option>Mobile Money</option><option>Virement bancaire</option>
-                                </select>
-                            </div>
+        <main id="main-content">
+            
+            <section id="sec-achat" class="tab-content animate-slideIn">
+                <div class="glass p-10 max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-light mb-10 text-center tracking-[0.2em]">NOUVEL <span class="font-bold text-[#dda100]">ACHAT</span></h2>
+                    <form id="formAchat" class="grid grid-cols-1 md:grid-cols-2 gap-x-10">
+                        <div class="col-span-full">
+                            <label>Marque du véhicule</label>
+                            <input type="text" id="a_marque" placeholder="Ex: Range Rover Vogue 2023" required>
                         </div>
-                        <div id="panel-echelonne" class="hidden bg-yellow-600/10 p-4 rounded border border-yellow-600/30">
-                            <label>Montant versé ce jour</label>
-                            <input type="number" id="v_verse" value="0">
-                            <label>Date du prochain paiement</label>
-                            <input type="date" id="v_next_date">
+                        <div>
+                            <label>Nom de l'acheteur</label>
+                            <input type="text" id="a_acheteur" required>
+                            <label>Montant du véhicule</label>
+                            <input type="number" id="a_prix" class="calc-trigger" required>
+                            <label>Frais de réparation</label>
+                            <input type="number" id="a_reparation" class="calc-trigger" value="0">
                         </div>
-                        <label>Date de la vente</label>
-                        <input type="date" id="v_date_vente" required>
-                        <button type="submit" class="w-full gold-gradient text-black font-black py-4 rounded-lg mt-4">FINALISER LA VENTE</button>
-                    </div>
-                </form>
+                        <div>
+                            <label>Transport</label>
+                            <input type="number" id="a_transport" class="calc-trigger" value="0">
+                            <label>Douane</label>
+                            <input type="number" id="a_douane" class="calc-trigger" value="0">
+                            <label>Frais Annexes Douane</label>
+                            <input type="number" id="a_annexe" class="calc-trigger" value="0">
+                        </div>
+                        <div class="col-span-full bg-black/40 p-6 rounded-xl border border-dashed border-[#dda100]/30 mt-4 text-center">
+                            <p class="text-xs uppercase opacity-60 mb-1">Coût d'acquisition total (Sortie)</p>
+                            <span id="a_total_live" class="text-4xl font-black text-[#dda100]">0</span> <span class="text-[#dda100]">FCFA</span>
+                        </div>
+                        <button type="submit" class="col-span-full gold-gradient py-5 rounded-xl mt-8 uppercase tracking-[0.3em]">Enregistrer l'achat & PDF</button>
+                    </form>
+                </div>
             </section>
 
-            <section id="sec-encaissement" class="hidden card p-8">
-                <h2 class="text-2xl font-bold mb-6">💰 Encaissements Clients (Crédits)</h2>
-                <div class="overflow-x-auto" id="list-encaissements"></div>
+            <section id="sec-vente" class="tab-content hidden">
+                <div class="glass p-10">
+                    <h2 class="text-3xl font-light mb-10 text-center tracking-[0.2em]">CONTRAT DE <span class="font-bold text-[#dda100]">VENTE</span></h2>
+                    <form id="formVente" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                        <div class="space-y-2 border-r border-white/5 pr-6">
+                            <h3 class="text-[#dda100] text-[10px] font-bold tracking-widest mb-6">IDENTITÉ CLIENT</h3>
+                            <label>Nom & Prénoms</label><input type="text" id="v_nom" required>
+                            <label>Né(e) le / à</label><input type="text" id="v_naiss">
+                            <label>Contact</label><input type="text" id="v_contact">
+                            <label>Nationalité</label><input type="text" id="v_nat">
+                            <label>Profession</label><input type="text" id="v_prof">
+                        </div>
+                        <div class="space-y-2 border-r border-white/5 pr-6">
+                            <h3 class="text-[#dda100] text-[10px] font-bold tracking-widest mb-6">DOMICILE & PIÈCES</h3>
+                            <label>Domicile Actuel</label><input type="text" id="v_dom">
+                            <label>N° Pièce d'identité</label><input type="text" id="v_piece">
+                            <label>Délivrée le</label><input type="date" id="v_piece_date">
+                            <label>Date de la vente</label><input type="date" id="v_vente_date" required>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-[#dda100] text-[10px] font-bold tracking-widest mb-6">VÉHICULE & PAIEMENT</h3>
+                            <label>Sélectionner le Véhicule</label>
+                            <select id="v_stock_select" required></select>
+                            
+                            <label>Type de vente</label>
+                            <select id="v_type" onchange="toggleEchelonne(this.value)">
+                                <option value="soldé">SOLDÉ</option>
+                                <option value="échelonné">ÉCHELONNÉ</option>
+                            </select>
+
+                            <div id="v_panel_ech" class="hidden bg-white/5 p-4 rounded-lg border border-[#dda100]/20">
+                                <label>Montant versé</label><input type="number" id="v_accompte" value="0">
+                                <label>Date prochain paiement</label><input type="date" id="v_next_date">
+                            </div>
+
+                            <label>Montant total de la vente</label>
+                            <input type="number" id="v_montant_total" required>
+                            
+                            <label>Mode de paiement</label>
+                            <select id="v_mode">
+                                <option>Espèce</option>
+                                <option>Chèque</option>
+                                <option>Mobile Money</option>
+                                <option>Virement bancaire</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="col-span-full gold-gradient py-5 rounded-xl mt-4 uppercase tracking-[0.3em]">Valider la vente & reçu PDF</button>
+                    </form>
+                </div>
             </section>
 
-            <section id="sec-archives" class="hidden card p-8">
-                <h2 class="text-2xl font-bold mb-6">📂 Archives des Documents</h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="archive-grid"></div>
-            </section>
-
-            <section id="sec-master" class="hidden card p-8">
-                <h2 class="text-2xl font-bold mb-6 text-red-500 underline">⚠️ GESTION MASTER (ÉDITION TOTALE)</h2>
-                <div id="master-container" class="space-y-6"></div>
-            </section>
-
-            <section id="sec-historique" class="hidden card p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">📜 Historique Journalier</h2>
-                    <div class="flex gap-2">
-                        <input type="date" id="h-start" class="!mb-0 !p-1 text-xs">
-                        <input type="date" id="h-end" class="!mb-0 !p-1 text-xs">
-                        <button onclick="exportJournal()" class="bg-white text-black px-4 py-2 rounded font-bold text-sm">EXPORT PDF</button>
+            <section id="sec-encaissement" class="tab-content hidden">
+                <div class="glass p-10">
+                    <h2 class="text-3xl font-light mb-10 text-center tracking-[0.2em]">SUIVI DES <span class="font-bold text-[#dda100]">ENCAISSEMENTS</span></h2>
+                    <div class="overflow-x-auto">
+                        <table class="custom-table">
+                            <thead>
+                                <tr class="text-[#dda100] text-xs uppercase tracking-widest">
+                                    <td class="font-bold">Client</td>
+                                    <td class="font-bold">Véhicule</td>
+                                    <td class="font-bold">Montant Total</td>
+                                    <td class="font-bold">Reste à payer</td>
+                                    <td class="font-bold">Action</td>
+                                </tr>
+                            </thead>
+                            <tbody id="list-encaissements"></tbody>
+                        </table>
                     </div>
                 </div>
-                <div id="historique-table"></div>
             </section>
+
+            <section id="sec-archives" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-8 gold-text uppercase tracking-widest">Archives Documentaires</h2>
+                <div id="archive-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+            </section>
+
+            <section id="sec-master" class="tab-content hidden">
+                <div class="glass p-8 border-t-4 border-red-600">
+                    <h2 class="text-2xl font-bold text-red-500 mb-8 uppercase tracking-widest">Gestion Master : Édition Intégrale</h2>
+                    <div class="grid grid-cols-1 gap-12" id="master-editor">
+                        </div>
+                </div>
+            </section>
+
+            <section id="sec-historique" class="tab-content hidden">
+                <div class="glass p-10">
+                    <div class="flex justify-between items-center mb-10">
+                        <h2 class="text-3xl font-light tracking-[0.2em]">JOURNAL DES <span class="font-bold text-[#dda100]">OPÉRATIONS</span></h2>
+                        <button onclick="downloadJournal()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-xs hover:bg-[#dda100] transition">TÉLÉCHARGER JOURNAL PDF</button>
+                    </div>
+                    <div id="journal-list" class="space-y-4"></div>
+                </div>
+            </section>
+
         </main>
     </div>
 
-    <script>
-        const { createClient } = supabase;
-        const _supabase = createClient("https://asewhxxlkxktjucmaknd.supabase.co", "sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg");
+    <div id="modalEncaissement" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[100] p-4">
+        <div class="glass p-8 max-w-md w-full">
+            <h3 class="text-xl gold-text mb-6 uppercase font-bold">Nouvel Encaissement</h3>
+            <label>Montant reçu</label>
+            <input type="number" id="modal_montant_paye">
+            <label>Prochain RDV (optionnel)</label>
+            <input type="date" id="modal_prochain_rdv">
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 border border-white/20 py-3 rounded-lg uppercase text-xs font-bold">Annuler</button>
+                <button onclick="processEncaissement()" class="flex-1 gold-gradient py-3 rounded-lg uppercase text-xs font-bold text-black">Valider</button>
+            </div>
+        </div>
+    </div>
 
-        // --- NAVIGATION ---
-        function showSection(id) {
-            document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+    <script>
+        // --- CONFIGURATION SUPABASE ---
+        const { createClient } = supabase;
+        const _sb = createClient("https://asewhxxlkxktjucmaknd.supabase.co", "sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg");
+
+        // --- NAVIGATION & UI ---
+        function changeTab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.getElementById('sec-' + id).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             
-            if(id === 'vente') loadStock();
+            // Refresh auto selon l'onglet
+            if(id === 'vente') loadStockSelect();
             if(id === 'encaissement') loadCredits();
-            if(id === 'master') loadMaster();
+            if(id === 'master') loadMasterEditor();
             if(id === 'historique') loadHistory();
+            updateGlobalStats();
         }
 
+        function toggleEchelonne(val) {
+            document.getElementById('v_panel_ech').classList.toggle('hidden', val !== 'échelonné');
+        }
+
+        // --- HORLOGE ---
+        function updateClock() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('liveDate').innerText = new Date().toLocaleDateString('fr-FR', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         // --- CALCULS AUTO ACHAT ---
-        document.querySelectorAll('.calc-achat').forEach(el => {
-            el.addEventListener('input', () => {
-                const total = ['a_prix', 'a_reparation', 'a_transport', 'a_douane', 'a_annexe']
-                    .reduce((acc, id) => acc + (Number(document.getElementById(id).value) || 0), 0);
-                document.getElementById('a_total_display').innerText = total.toLocaleString();
+        document.querySelectorAll('.calc-trigger').forEach(input => {
+            input.addEventListener('input', () => {
+                const prix = Number(document.getElementById('a_prix').value) || 0;
+                const rep = Number(document.getElementById('a_reparation').value) || 0;
+                const trans = Number(document.getElementById('a_transport').value) || 0;
+                const douane = Number(document.getElementById('a_douane').value) || 0;
+                const annexe = Number(document.getElementById('a_annexe').value) || 0;
+                const total = prix + rep + trans + douane + annexe;
+                document.getElementById('a_total_live').innerText = total.toLocaleString();
             });
         });
 
-        function checkVenteType() {
-            const type = document.getElementById('v_type').value;
-            document.getElementById('panel-echelonne').classList.toggle('hidden', type !== 'échelonné');
-        }
-
-        // --- GÉNÉRATION PDF AVEC MARGES 30MM ---
-        function generateProfessionalPDF(title, data, filename) {
+        // --- GÉNÉRATION PDF (STRICT 30MM) ---
+        function generatePDF(title, data, filename) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
-            const margin = 30; // Exigence 30mm haut/bas
+            const margin = 30; // 30mm haut et bas
             
-            // Date & Heure Haut Gauche
+            // Heure et Date (Haut Gauche)
             doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text(`${new Date().toLocaleString()}`, 15, 15);
+            doc.setTextColor(150);
+            doc.text(new Date().toLocaleString('fr-FR'), 15, 15);
 
-            // Titre Section - Taille 18
+            // Titre Principal (Taille 18)
             doc.setFontSize(18);
             doc.setTextColor(30, 30, 31);
+            doc.setFont(undefined, 'bold');
             doc.text(title.toUpperCase(), 105, margin + 10, { align: 'center' });
 
-            // Données - Taille 14
-            const body = Object.entries(data).map(([k, v]) => [k, v]);
-            
+            // Préparation des lignes du tableau (Taille 14)
+            const rows = Object.entries(data).map(([key, value]) => [key, value]);
+
             doc.autoTable({
                 startY: margin + 25,
                 margin: { top: margin, bottom: margin },
-                body: body,
+                body: rows,
                 theme: 'grid',
-                styles: { fontSize: 14, cellPadding: 5 },
-                headStyles: { fillColor: [30, 30, 31], textColor: [221, 161, 0] }, // Fond Gris-Noir / Texte Or
-                columnStyles: { 0: { fontStyle: 'bold', fillColor: [240, 240, 240] } }
+                styles: { fontSize: 14, cellPadding: 6, font: 'helvetica' },
+                headStyles: { fillColor: [30, 30, 31], textColor: [221, 161, 0], fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [250, 250, 250] },
+                // Background gris-noir sur les titres de sous-parties (simulation)
+                didParseCell: function(data) {
+                    if (data.section === 'body' && data.column.index === 0) {
+                        data.cell.styles.fillColor = [40, 40, 40];
+                        data.cell.styles.textColor = [255, 255, 255];
+                    }
+                }
             });
 
-            // Sauvegarde locale pour simulation Archives
-            const pdfBlob = doc.output('bloburl');
-            addToArchives(title, pdfBlob);
+            const blob = doc.output('bloburl');
+            saveToArchive(title, blob);
             doc.save(filename);
         }
 
-        function addToArchives(name, url) {
-            const container = document.getElementById('archive-grid');
-            const html = `
-                <div class="bg-black/40 p-4 border border-yellow-600 rounded text-center">
-                    <p class="text-xs text-gray-500 mb-2">${new Date().toLocaleDateString()}</p>
-                    <p class="font-bold text-sm mb-3">${name}</p>
-                    <a href="${url}" target="_blank" class="text-xs bg-[#dda100] text-black px-3 py-1 rounded font-bold">RE-TÉLÉCHARGER</a>
-                </div>`;
-            container.insertAdjacentHTML('afterbegin', html);
+        function saveToArchive(name, url) {
+            const container = document.getElementById('archive-container');
+            const div = document.createElement('div');
+            div.className = "glass p-6 text-center border-b-4 border-[#dda100]";
+            div.innerHTML = `
+                <p class="text-[10px] opacity-40 mb-2">${new Date().toLocaleDateString()}</p>
+                <h4 class="font-bold text-sm mb-4 truncate">${name}</h4>
+                <a href="${url}" target="_blank" class="block bg-white/5 border border-white/10 py-2 rounded text-[10px] hover:bg-[#dda100] hover:text-black transition uppercase font-black">Consulter / Re-télécharger</a>
+            `;
+            container.prepend(div);
         }
 
-        // --- ACTIONS SUPABASE ---
-        document.getElementById('form-achat').onsubmit = async (e) => {
+        // --- FONCTIONS SUPABASE ---
+        
+        // 1. ACHAT
+        document.getElementById('formAchat').onsubmit = async (e) => {
             e.preventDefault();
             const d = {
                 marque: document.getElementById('a_marque').value,
@@ -255,53 +424,168 @@
                 reparation: Number(document.getElementById('a_reparation').value),
                 transport: Number(document.getElementById('a_transport').value),
                 douane: Number(document.getElementById('a_douane').value),
-                annexe: Number(document.getElementById('a_annexe').value),
-                date_operation: new Date().toISOString()
+                annexe: Number(document.getElementById('a_annexe').value)
             };
-            const acquisitionTotal = d.prix_base + d.reparation + d.transport + d.douane + d.annexe;
-            
-            const { error } = await _supabase.from('achats').insert([d]);
-            if(!error) {
-                generateProfessionalPDF("REÇU D'ACHAT VÉHICULE", {
+            const total = d.prix_base + d.reparation + d.transport + d.douane + d.annexe;
+
+            const { data, error } = await _sb.from('achats').insert([d]);
+            if (!error) {
+                generatePDF("Reçu Acquisition Véhicule", {
                     "Véhicule": d.marque,
                     "Acheteur": d.acheteur,
                     "Prix Achat": d.prix_base + " FCFA",
-                    "Frais Réparation": d.reparation + " FCFA",
+                    "Réparations": d.reparation + " FCFA",
                     "Transport": d.transport + " FCFA",
                     "Douane": d.douane + " FCFA",
                     "Frais Annexes": d.annexe + " FCFA",
-                    "TOTAL SORTIE": acquisitionTotal + " FCFA"
+                    "COÛT ACQUISITION": total + " FCFA"
                 }, `Achat_${d.marque}.pdf`);
-                alert("Achat enregistré avec succès !");
-                refreshAll();
+                alert("Acquisition enregistrée !");
+                e.target.reset();
+                document.getElementById('a_total_live').innerText = "0";
+                updateGlobalStats();
             }
         };
 
-        // --- FONCTIONS DE CHARGEMENT ---
-        async function loadStock() {
-            const { data } = await _supabase.from('achats').select('*');
-            const select = document.getElementById('v_vehicule_id');
-            select.innerHTML = data.map(v => `<option value="${v.id}">${v.marque}</option>`).join('');
+        // 2. CHARGEMENT STOCK POUR VENTE
+        async function loadStockSelect() {
+            const { data } = await _sb.from('achats').select('id, marque');
+            const select = document.getElementById('v_stock_select');
+            select.innerHTML = '<option value="">Choisir un véhicule...</option>';
+            data.forEach(item => {
+                select.innerHTML += `<option value="${item.id}">${item.marque}</option>`;
+            });
         }
 
-        async function refreshAll() {
-            const { data: a } = await _supabase.from('achats').select('*');
-            const { data: v } = await _supabase.from('ventes').select('*');
+        // 3. VENTE
+        document.getElementById('formVente').onsubmit = async (e) => {
+            e.preventDefault();
+            const type = document.getElementById('v_type').value;
+            const payload = {
+                client_nom: document.getElementById('v_nom').value,
+                client_details: {
+                    naissance: document.getElementById('v_naiss').value,
+                    contact: document.getElementById('v_contact').value,
+                    nationalite: document.getElementById('v_nat').value,
+                    profession: document.getElementById('v_prof').value,
+                    domicile: document.getElementById('v_dom').value,
+                    piece_n: document.getElementById('v_piece').value,
+                    piece_date: document.getElementById('v_piece_date').value
+                },
+                vehicule_id: document.getElementById('v_stock_select').value,
+                type_vente: type,
+                montant_total_vente: Number(document.getElementById('v_montant_total').value),
+                mode_paiement: document.getElementById('v_mode').value,
+                date_vente: document.getElementById('v_vente_date').value
+            };
+
+            const { data: vData, error } = await _sb.from('ventes').insert([payload]).select();
+            if (!error && type === 'échelonné') {
+                // Créer le premier encaissement
+                await _sb.from('encaissements').insert([{
+                    vente_id: vData[0].id,
+                    montant_paye: Number(document.getElementById('v_accompte').value),
+                    prochain_rdv: document.getElementById('v_next_date').value
+                }]);
+            }
+
+            if (!error) {
+                generatePDF("Contrat de Vente Automobile", {
+                    "Client": payload.client_nom,
+                    "Véhicule": document.getElementById('v_stock_select').options[document.getElementById('v_stock_select').selectedIndex].text,
+                    "Type de Vente": payload.type_vente,
+                    "Montant Transaction": payload.montant_total_vente + " FCFA",
+                    "Mode de Paiement": payload.mode_paiement,
+                    "Date de Vente": payload.date_vente
+                }, `Vente_${payload.client_nom}.pdf`);
+                alert("Vente finalisée avec succès !");
+                e.target.reset();
+                updateGlobalStats();
+            }
+        };
+
+        // 4. STATISTIQUES GLOBAL
+        async function updateGlobalStats() {
+            const { data } = await _sb.from('statistiques_ecf').select('*').single();
+            if (data) {
+                document.getElementById('statSortie').innerText = Number(data.total_sorties).toLocaleString() + " FCFA";
+                document.getElementById('statEntree').innerText = Number(data.total_entrees).toLocaleString() + " FCFA";
+                document.getElementById('statBenefice').innerText = Number(data.benefice_net).toLocaleString() + " FCFA";
+            }
+        }
+
+        // 5. ENCAISSEMENTS
+        async function loadCredits() {
+            const { data } = await _sb.from('suivi_credits').select('*');
+            const container = document.getElementById('list-encaissements');
+            container.innerHTML = "";
+            data.forEach(item => {
+                if (item.reste_a_payer > 0) {
+                    container.innerHTML += `
+                        <tr>
+                            <td>${item.client_nom}</td>
+                            <td class="opacity-50 text-xs italic">Ref Vente #${item.vente_id}</td>
+                            <td>${item.montant_total_vente.toLocaleString()} FCFA</td>
+                            <td class="text-[#dda100] font-bold">${item.reste_a_payer.toLocaleString()} FCFA</td>
+                            <td>
+                                <button onclick="openEncaissementModal(${item.vente_id})" class="bg-[#dda100] text-black px-4 py-1 rounded-full text-[10px] font-black uppercase">Encaisser</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+
+        let activeVenteId = null;
+        function openEncaissementModal(id) {
+            activeVenteId = id;
+            document.getElementById('modalEncaissement').classList.remove('hidden');
+        }
+        function closeModal() { document.getElementById('modalEncaissement').classList.add('hidden'); }
+
+        async function processEncaissement() {
+            const m = Number(document.getElementById('modal_montant_paye').value);
+            const rdv = document.getElementById('modal_prochain_rdv').value;
             
-            const totalSorties = a.reduce((acc, curr) => acc + curr.prix_base + curr.reparation + curr.transport + curr.douane + curr.annexe, 0);
-            const totalEntrees = v.reduce((acc, curr) => acc + curr.montant_total, 0);
-
-            document.getElementById('stat-sortie').innerText = totalSorties.toLocaleString() + " FCFA";
-            document.getElementById('stat-entree').innerText = totalEntrees.toLocaleString() + " FCFA";
-            document.getElementById('stat-benefice').innerText = (totalEntrees - totalSorties).toLocaleString() + " FCFA";
+            const { error } = await _sb.from('encaissements').insert([{
+                vente_id: activeVenteId,
+                montant_paye: m,
+                prochain_rdv: rdv
+            }]);
+            
+            if (!error) {
+                alert("Encaissement réussi !");
+                closeModal();
+                loadCredits();
+                updateGlobalStats();
+            }
         }
 
-        // Horloge temps réel
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleString('fr-FR');
-        }, 1000);
+        // 6. MASTER EDITOR
+        async function loadMasterEditor() {
+            const { data: a } = await _sb.from('achats').select('*');
+            const { data: v } = await _sb.from('ventes').select('*');
+            const container = document.getElementById('master-editor');
+            container.innerHTML = "";
 
-        window.onload = refreshAll;
+            let html = `<div><h3 class="gold-text mb-4 font-bold tracking-widest uppercase">Édition des Achats</h3>`;
+            a.forEach(item => {
+                html += `
+                    <div class="glass p-4 mb-2 flex justify-between items-center text-xs">
+                        <span>${item.marque} | ${item.cout_total_acquisition} FCFA</span>
+                        <button onclick="editAchat(${item.id})" class="text-[#dda100] underline font-bold">Modifier Intégralement</button>
+                    </div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // Initialisation au chargement
+        window.onload = () => {
+            updateGlobalStats();
+            updateClock();
+        };
+
     </script>
 </body>
 </html>
