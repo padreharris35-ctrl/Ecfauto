@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECF | Système de Gestion Automobile v11 Cloud</title>
+    <title>ECF | Système de Gestion Automobile PRO Cloud</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -33,7 +33,7 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* PDF STYLES - MODIFIÉ POUR 20mm HAUT/BAS */
+        /* PDF CONFIGURATION - MARGE 20mm HAUT/BAS */
         #pdf-render-zone { width: 210mm; min-height: 297mm; padding: 20mm 20mm 20mm 20mm; background: white; color: black; font-family: Arial, sans-serif; }
         .pdf-title-main { text-align: center; font-size: 20pt; font-weight: bold; border-bottom: 4px solid #000; padding-bottom: 12px; margin-bottom: 25px; text-transform: uppercase; }
         .pdf-section-title { background: #000; color: white; padding: 6px 15px; font-weight: bold; margin-top: 15px; text-transform: uppercase; font-size: 11pt; }
@@ -103,24 +103,15 @@
                 <form id="formVente" class="card-luxury p-8 space-y-6">
                     <div class="grid grid-cols-3 gap-4">
                         <div><label>Nom complet Client</label><input type="text" id="v_nom" required></div>
-                        <div><label>Date de Naissance</label><input type="date" id="v_naiss"></div>
-                        <div><label>Lieu de Naissance</label><input type="text" id="v_lieu"></div>
-                        <div><label>Nationalité</label><input type="text" id="v_nat"></div>
-                        <div><label>Profession</label><input type="text" id="v_prof"></div>
-                        <div><label>Domicile</label><input type="text" id="v_dom"></div>
-                        <div><label>N° Pièce d'Identité</label><input type="text" id="v_id_num"></div>
-                        <div><label>Délivrée le</label><input type="date" id="v_id_date"></div>
-                        <div><label>Contact Téléphonique</label><input type="text" id="v_contact"></div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-6 pt-4 border-t border-white/5">
+                        <div><label>Contact Téléphonique</label><input type="text" id="v_contact" required></div>
                         <div><label>Choisir Véhicule</label><select id="v_auto" class="text-gold" required></select></div>
                         <div><label>Date de Vente</label><input type="date" id="v_date" required></div>
                         <div><label>Mode de Paiement</label><select id="v_mode"><option>Espèce</option><option>Chèque</option><option>Virement</option></select></div>
                         <div><label>Statut Paiement</label><select id="v_type" onchange="toggleEch()"><option value="soldé">SOLDÉ (Totalité)</option><option value="échelonné">ÉCHELONNÉ (Reliquat)</option></select></div>
                         <div><label>Prix de Vente Convenu</label><input type="number" id="v_prix_vente" required></div>
-                        <div id="box_ech" class="hidden space-y-4">
-                            <div><label>Acompte Payé</label><input type="number" id="v_acompte"></div>
-                            <div><label>Date Prochain RDV</label><input type="date" id="v_next"></div>
+                        <div id="box_ech" class="hidden">
+                            <label>Acompte Payé</label><input type="number" id="v_acompte">
+                            <label class="mt-2">Date Prochain RDV</label><input type="date" id="v_next">
                         </div>
                     </div>
                     <button type="submit" class="btn-gold w-full">Valider la Vente Cloud & Générer Facture</button>
@@ -140,8 +131,8 @@
                     </div>
                 </div>
                 <div id="master-edit-zone" class="hidden">
-                    <button onclick="closeMaster()" class="mb-4 text-red-500 font-bold flex items-center gap-2"><i data-lucide="arrow-left"></i> RETOUR AU REGISTRE</button>
-                    <div id="edit-form-content" class="card-luxury p-8 border-2 border-gold/40"></div>
+                    <button onclick="closeMaster()" class="mb-4 text-red-500 font-bold flex items-center gap-2"><i data-lucide="arrow-left"></i> RETOUR</button>
+                    <div id="edit-form-content" class="card-luxury p-8"></div>
                 </div>
             </section>
 
@@ -151,14 +142,7 @@
             </section>
 
             <section id="journal" class="tab-content">
-                <div class="flex justify-between items-end mb-8">
-                    <h2 class="text-3xl font-luxury">Journal d'Activité Cloud</h2>
-                    <div class="flex gap-4 items-end">
-                        <div><label>Du</label><input type="date" id="h_start" class="w-36"></div>
-                        <div><label>Au</label><input type="date" id="h_end" class="w-36"></div>
-                        <button onclick="printJournal()" class="btn-gold px-6 flex items-center gap-2 h-10"><i data-lucide="download-cloud"></i> EXPORT PDF</button>
-                    </div>
-                </div>
+                <h2 class="text-3xl font-luxury mb-8">Journal d'Activité Cloud</h2>
                 <div class="card-luxury overflow-hidden">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-black text-gold">
@@ -189,18 +173,19 @@
 </div>
 
 <script>
-    // --- CONFIGURATION SUPABASE (À REMPLIR) ---
-    const SUPABASE_URL = "https://asewhxxlkxktjucmaknd.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // --- CONNEXION SUPABASE ---
+    const SUPABASE_URL = "TON_URL_PROJET";
+    const SUPABASE_KEY = "TON_API_KEY_ANON";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let db = { achats: [], ventes: [], logs: [], archives: [] };
 
-    async function loadDataFromCloud() {
-        const { data: a } = await supabase.from('achats').select('*').order('created_at', {ascending: false});
-        const { data: v } = await supabase.from('ventes').select('*').order('created_at', {ascending: false});
-        const { data: l } = await supabase.from('logs').select('*').order('created_at', {ascending: false});
-        const { data: ar } = await supabase.from('archives').select('*').order('created_at', {ascending: false});
+    // --- CHARGEMENT DES DONNÉES ---
+    async function syncCloud() {
+        const { data: a } = await supabaseClient.from('achats').select('*').order('created_at', {ascending: false});
+        const { data: v } = await supabaseClient.from('ventes').select('*').order('created_at', {ascending: false});
+        const { data: l } = await supabaseClient.from('logs').select('*').order('created_at', {ascending: false});
+        const { data: ar } = await supabaseClient.from('archives').select('*').order('created_at', {ascending: false});
         
         db.achats = a || [];
         db.ventes = v || [];
@@ -208,182 +193,135 @@
         db.archives = ar || [];
 
         refreshFinance();
+        renderActiveTab();
     }
 
-    const refreshData = async () => {
-        await loadDataFromCloud();
-        const activeTab = document.querySelector('.tab-content.active').id;
-        if(activeTab === 'vente') renderStockDropdown();
-        if(activeTab === 'gestion') renderMaster();
-        if(activeTab === 'journal') renderJournal();
-        if(activeTab === 'archives') renderArchives();
-        if(activeTab === 'encaissement') renderEncaissement();
-    };
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('real-date').innerText = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        document.getElementById('real-time').innerText = now.toLocaleTimeString('fr-FR');
+    function renderActiveTab() {
+        const activeId = document.querySelector('.tab-content.active').id;
+        if(activeId === 'vente') renderStockDropdown();
+        if(activeId === 'gestion') renderMaster();
+        if(activeId === 'journal') renderJournal();
+        if(activeId === 'archives') renderArchives();
+        if(activeId === 'encaissement') renderEncaissement();
     }
-    setInterval(updateClock, 1000); updateClock();
 
-    function switchTab(id) {
+    async function switchTab(id) {
         document.querySelectorAll('.tab-content, .nav-item').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.getElementById('nav-' + id).classList.add('active');
-        refreshData();
+        await syncCloud();
     }
 
+    // --- CALCULS ET FINANCES ---
     function refreshFinance() {
-        const sorties = db.achats.reduce((a, c) => a + (Number(c.total_acq) || 0), 0);
-        const entrees = db.ventes.reduce((a, c) => a + (Number(c.paye) || 0), 0) + db.logs.filter(l => l.type === 'REL').reduce((a, c) => a + Number(c.mt), 0);
+        const sorties = db.achats.reduce((a, c) => a + Number(c.total_acq || 0), 0);
+        const entrees = db.ventes.reduce((a, c) => a + Number(c.paye || 0), 0) + 
+                        db.logs.filter(l => l.type === 'REL').reduce((a, c) => a + Number(c.mt || 0), 0);
+        
         document.getElementById('kpi-sorties').innerText = sorties.toLocaleString() + ' FCFA';
         document.getElementById('kpi-entrees').innerText = entrees.toLocaleString() + ' FCFA';
         document.getElementById('kpi-benefice').innerText = (entrees - sorties).toLocaleString() + ' FCFA';
     }
 
     const calcAchat = () => ['a_prix', 'a_rep', 'a_trans', 'a_douane', 'a_ann'].reduce((a, id) => a + (Number(document.getElementById(id).value) || 0), 0);
-    document.querySelectorAll('.calc-achat').forEach(i => i.addEventListener('input', () => document.getElementById('total_acq').innerText = calcAchat().toLocaleString() + ' FCFA'));
+    document.querySelectorAll('.calc-achat').forEach(i => i.addEventListener('input', () => {
+        document.getElementById('total_acq').innerText = calcAchat().toLocaleString() + ' FCFA';
+    }));
 
+    // --- ENREGISTREMENT ACHAT ---
     document.getElementById('formAchat').onsubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            id: Date.now(), marque: document.getElementById('a_marque').value, acheteur: document.getElementById('a_acheteur').value,
-            prix: document.getElementById('a_prix').value, rep: document.getElementById('a_rep').value, trans: document.getElementById('a_trans').value,
-            douane: document.getElementById('a_douane').value, ann: document.getElementById('a_ann').value, total_acq: calcAchat(), vendu: false,
+        const total = calcAchat();
+        const item = {
+            id: Date.now(),
+            marque: document.getElementById('a_marque').value,
+            acheteur: document.getElementById('a_acheteur').value,
+            prix: Number(document.getElementById('a_prix').value),
+            rep: Number(document.getElementById('a_rep').value),
+            trans: Number(document.getElementById('a_trans').value),
+            douane: Number(document.getElementById('a_douane').value),
+            ann: Number(document.getElementById('a_ann').value),
+            total_acq: total,
+            vendu: false,
             date: new Date().toLocaleDateString()
         };
+
+        await supabaseClient.from('achats').insert([item]);
+        await supabaseClient.from('logs').insert([{ d: item.date, op: 'ACHAT', det: item.marque, mt: total, type: 'SORTIE' }]);
+        await supabaseClient.from('archives').insert([{ id: item.id, type: "BORDEREAU D'ACHAT", titre: item.marque, date: item.date, mt: total, data: item }]);
         
-        await supabase.from('achats').insert([data]);
-        await supabase.from('logs').insert([{ d: data.date, op: 'ACHAT VÉHICULE', det: data.marque, mt: data.total_acq, type: 'SORTIE' }]);
-        await supabase.from('archives').insert([{ id: data.id, type: "BORDEREAU D'ACHAT", titre: data.marque, date: data.date, mt: data.total_acq, data: data }]);
-        
-        await refreshData();
-        generatePDF("BORDEREAU D'ACHAT", data, true);
+        generatePDF("BORDEREAU D'ACHAT", item, true);
         e.target.reset();
         document.getElementById('total_acq').innerText = "0 FCFA";
+        await syncCloud();
     };
 
+    // --- ENREGISTREMENT VENTE ---
     function toggleEch() { document.getElementById('box_ech').classList.toggle('hidden', document.getElementById('v_type').value === 'soldé'); }
     function renderStockDropdown() {
         const dispo = db.achats.filter(a => !a.vendu);
-        document.getElementById('v_auto').innerHTML = dispo.map(a => `<option value="${a.id}">${a.marque}</option>`).join('') || '<option value="">AUCUN VÉHICULE EN STOCK</option>';
+        document.getElementById('v_auto').innerHTML = dispo.map(a => `<option value="${a.id}">${a.marque}</option>`).join('') || '<option value="">STOCK VIDE</option>';
     }
 
     document.getElementById('formVente').onsubmit = async (e) => {
         e.preventDefault();
         const auto = db.achats.find(a => a.id == document.getElementById('v_auto').value);
-        if(!auto) return;
         const total = Number(document.getElementById('v_prix_vente').value);
         const paye = document.getElementById('v_type').value === 'soldé' ? total : Number(document.getElementById('v_acompte').value);
+        
         const vente = {
-            id: Date.now(), nom: document.getElementById('v_nom').value, naiss: document.getElementById('v_naiss').value, lieu: document.getElementById('v_lieu').value, nat: document.getElementById('v_nat').value, prof: document.getElementById('v_prof').value, dom: document.getElementById('v_dom').value, id_num: document.getElementById('v_id_num').value, id_date: document.getElementById('v_id_date').value, contact: document.getElementById('v_contact').value,
-            marque: auto.marque, autoId: auto.id, date: document.getElementById('v_date').value, mode: document.getElementById('v_mode').value, total: total, paye: paye, reste: total - paye, next: document.getElementById('v_next').value
+            id: Date.now(), nom: document.getElementById('v_nom').value, contact: document.getElementById('v_contact').value,
+            marque: auto.marque, autoId: auto.id, date: document.getElementById('v_date').value, mode: document.getElementById('v_mode').value,
+            total: total, paye: paye, reste: total - paye, next: document.getElementById('v_next').value
         };
 
-        await supabase.from('achats').update({ vendu: true }).eq('id', auto.id);
-        await supabase.from('ventes').insert([vente]);
-        await supabase.from('logs').insert([{ d: vente.date, op: 'VENTE VÉHICULE', det: `${vente.nom} (${vente.marque})`, mt: paye, type: 'ENTREE' }]);
-        await supabase.from('archives').insert([{ id: vente.id, type: 'FACTURE DE VENTE', titre: vente.nom, date: vente.date, mt: vente.total, data: vente }]);
+        await supabaseClient.from('achats').update({ vendu: true }).eq('id', auto.id);
+        await supabaseClient.from('ventes').insert([vente]);
+        await supabaseClient.from('logs').insert([{ d: vente.date, op: 'VENTE', det: vente.nom, mt: paye, type: 'ENTREE' }]);
+        await supabaseClient.from('archives').insert([{ id: vente.id, type: 'FACTURE', titre: vente.nom, date: vente.date, mt: total, data: vente }]);
         
-        await refreshData();
         generatePDF("FACTURE DE VENTE", vente, false);
         e.target.reset();
+        await syncCloud();
     };
 
+    // --- GESTION MASTER ---
     function renderMaster() {
-        document.getElementById('master-achats-list').innerHTML = db.achats.map(a => `<div class="p-3 bg-white/5 border border-white/5 flex justify-between items-center rounded"><div><p class="text-[10px] font-bold text-gold uppercase">${a.marque}</p><p class="text-[9px] text-gray-500">${a.date}</p></div><button onclick="editAchatMaster(${a.id})" class="text-[9px] font-bold bg-white/10 px-3 py-1 rounded">MODIFIER TOUT</button></div>`).join('');
-        document.getElementById('master-ventes-list').innerHTML = db.ventes.map(v => `<div class="p-3 bg-white/5 border border-white/5 flex justify-between items-center rounded"><div><p class="text-[10px] font-bold text-gold uppercase">${v.nom}</p><p class="text-[9px] text-gray-500">${v.marque} - ${v.date}</p></div><button onclick="editVenteMaster(${v.id})" class="text-[9px] font-bold bg-white/10 px-3 py-1 rounded">MODIFIER TOUT</button></div>`).join('');
+        document.getElementById('master-achats-list').innerHTML = db.achats.map(a => `<div class="p-3 bg-white/5 flex justify-between items-center rounded"><span>${a.marque}</span><button onclick="editAchatMaster(${a.id})" class="text-gold text-[10px] font-bold">MODIFIER</button></div>`).join('');
+        document.getElementById('master-ventes-list').innerHTML = db.ventes.map(v => `<div class="p-3 bg-white/5 flex justify-between items-center rounded"><span>${v.nom}</span><button onclick="editVenteMaster(${v.id})" class="text-gold text-[10px] font-bold">MODIFIER</button></div>`).join('');
     }
 
     function editAchatMaster(id) {
         const a = db.achats.find(x => x.id == id);
         document.getElementById('master-view').classList.add('hidden');
-        const zone = document.getElementById('master-edit-zone');
-        zone.classList.remove('hidden');
+        document.getElementById('master-edit-zone').classList.remove('hidden');
         document.getElementById('edit-form-content').innerHTML = `
-            <h3 class="text-2xl font-luxury text-gold mb-6">ÉDITION ACQUISITION CLOUD</h3>
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid grid-cols-2 gap-4">
                 <div><label>Marque</label><input type="text" id="em_marque" value="${a.marque}"></div>
-                <div><label>Acheteur</label><input type="text" id="em_acheteur" value="${a.acheteur}"></div>
                 <div><label>Prix Base</label><input type="number" id="em_prix" value="${a.prix}"></div>
-                <div><label>Réparations</label><input type="number" id="em_rep" value="${a.rep}"></div>
-                <div><label>Transport</label><input type="number" id="em_trans" value="${a.trans}"></div>
-                <div><label>Douane</label><input type="number" id="em_douane" value="${a.douane}"></div>
-                <div><label>Annexe</label><input type="number" id="em_ann" value="${a.ann}"></div>
+                <div><label>Rep</label><input type="number" id="em_rep" value="${a.rep}"></div>
+                <div><label>Trans</label><input type="number" id="em_trans" value="${a.trans}"></div>
             </div>
-            <button onclick="saveAchatMaster(${id})" class="btn-gold w-full mt-8">ENREGISTRER SUR SUPABASE</button>`;
+            <button onclick="saveAchatMaster(${id})" class="btn-gold w-full mt-6">Mettre à jour Cloud</button>`;
     }
 
     async function saveAchatMaster(id) {
-        const m = document.getElementById('em_marque').value;
         const p = Number(document.getElementById('em_prix').value);
         const r = Number(document.getElementById('em_rep').value);
         const t = Number(document.getElementById('em_trans').value);
-        const d = Number(document.getElementById('em_douane').value);
-        const an = Number(document.getElementById('em_ann').value);
-        const total = p+r+t+d+an;
-
-        await supabase.from('achats').update({ marque: m, prix: p, rep: r, trans: t, douane: d, ann: an, total_acq: total }).eq('id', id);
-        await refreshData(); closeMaster();
+        const total = p + r + t;
+        await supabaseClient.from('achats').update({ marque: document.getElementById('em_marque').value, prix: p, rep: r, trans: t, total_acq: total }).eq('id', id);
+        closeMaster(); await syncCloud();
     }
 
-    function editVenteMaster(id) {
-        const v = db.ventes.find(x => x.id == id);
-        document.getElementById('master-view').classList.add('hidden');
-        document.getElementById('master-edit-zone').classList.remove('hidden');
-        document.getElementById('edit-form-content').innerHTML = `
-            <h3 class="text-2xl font-luxury text-gold mb-6">ÉDITION VENTE CLOUD</h3>
-            <div class="grid grid-cols-3 gap-6">
-                <div><label>Nom Client</label><input type="text" id="em_nom" value="${v.nom}"></div>
-                <div><label>Contact</label><input type="text" id="em_contact" value="${v.contact}"></div>
-                <div><label>Prix Vendu</label><input type="number" id="em_total" value="${v.total}"></div>
-                <div><label>Payé</label><input type="number" id="em_paye" value="${v.paye}"></div>
-            </div>
-            <button onclick="saveVenteMaster(${id})" class="btn-gold w-full mt-8">ENREGISTRER SUR SUPABASE</button>`;
-    }
-
-    async function saveVenteMaster(id) {
-        const n = document.getElementById('em_nom').value;
-        const t = Number(document.getElementById('em_total').value);
-        const p = Number(document.getElementById('em_paye').value);
-        await supabase.from('ventes').update({ nom: n, total: t, paye: p, reste: t-p }).eq('id', id);
-        await refreshData(); closeMaster();
-    }
-
-    function closeMaster() { document.getElementById('master-edit-zone').classList.add('hidden'); document.getElementById('master-view').classList.remove('hidden'); }
-
-    function generatePDF(titre, data, isAchat) {
-        document.getElementById('pdf-header-title').innerText = titre;
-        document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString();
-        let html = '';
-        if(isAchat) {
-            html += `<div class="pdf-section-title">Détails de l'Acquisition</div>`;
-            html += pdfRow("Véhicule", data.marque) + pdfRow("Total Investi", data.total_acq, true);
-        } else {
-            html += `<div class="pdf-section-title">Client</div>`;
-            html += pdfRow("Nom", data.nom) + pdfRow("Contact", data.contact);
-            html += `<div class="pdf-section-title">Finance</div>`;
-            html += pdfRow("Prix Vente", data.total, true) + pdfRow("Payé", data.paye, true) + pdfRow("Reliquat", data.reste, true);
-        }
-        document.getElementById('pdf-body').innerHTML = html;
-        const opt = { margin:0, filename: titre+'.pdf', html2canvas:{scale:3}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} };
-        html2pdf().from(document.getElementById('pdf-render-zone')).set(opt).save();
-    }
-
-    function pdfRow(l, v, m=false) { return `<div class="pdf-grid"><span class="pdf-lbl">${l}</span><span class="pdf-val">${m?Number(v).toLocaleString()+' FCFA':v}</span></div>`; }
-
-    function renderJournal() {
-        document.getElementById('journal-body').innerHTML = db.logs.slice().reverse().map(l => `<tr class="border-b border-white/5"><td class="p-4">${l.d}</td><td class="p-4 font-bold ${l.type==='ENTREE'?'text-green-400':'text-red-400'}">${l.op}</td><td class="p-4 uppercase">${l.det}</td><td class="p-4 text-right font-bold">${l.mt.toLocaleString()} FCFA</td></tr>`).join('');
-    }
-
+    // --- RECOUVREMENT ---
     function renderEncaissement() {
         const list = db.ventes.filter(v => Number(v.reste) > 0);
         document.getElementById('encaisse-list').innerHTML = list.map(v => `
-            <div class="card-luxury p-6 flex justify-between items-center border-l-4 border-red-500">
-                <div><p class="text-gold font-bold uppercase">${v.nom}</p><p class="text-[10px]">Reste: ${v.reste.toLocaleString()} FCFA</p></div>
-                <div class="flex gap-3"><input type="number" id="pay_${v.id}" class="w-40" placeholder="Montant"><button onclick="validerEnc(${v.id})" class="btn-gold px-6">ENCAISSER</button></div>
-            </div>`).join('') || '<p class="text-center text-gray-500">Rien à encaisser.</p>';
+            <div class="card-luxury p-6 flex justify-between items-center">
+                <div><p class="text-gold font-bold">${v.nom}</p><p class="text-xs">Reste: ${v.reste.toLocaleString()} FCFA</p></div>
+                <div class="flex gap-2"><input type="number" id="pay_${v.id}" class="w-32"><button onclick="validerEnc(${v.id})" class="btn-gold px-4">PAYER</button></div>
+            </div>`).join('') || '<p class="text-center text-gray-500">Aucun reliquat en attente.</p>';
     }
 
     async function validerEnc(id) {
@@ -392,22 +330,56 @@
         if(mt > 0 && mt <= v.reste) {
             const nPaye = Number(v.paye) + mt;
             const nReste = Number(v.total) - nPaye;
-            await supabase.from('ventes').update({ paye: nPaye, reste: nReste }).eq('id', id);
-            await supabase.from('logs').insert([{ d: new Date().toLocaleDateString(), op: 'RECOUVREMENT', det: v.nom, mt: mt, type: 'REL' }]);
-            await refreshData();
+            await supabaseClient.from('ventes').update({ paye: nPaye, reste: nReste }).eq('id', id);
+            await supabaseClient.from('logs').insert([{ d: new Date().toLocaleDateString(), op: 'RECOUVREMENT', det: v.nom, mt: mt, type: 'REL' }]);
+            await syncCloud();
         }
     }
 
+    // --- JOURNAL & ARCHIVES ---
+    function renderJournal() {
+        document.getElementById('journal-body').innerHTML = db.logs.map(l => `<tr class="border-b border-white/5"><td class="p-4">${l.d}</td><td class="p-4 font-bold ${l.type==='ENTREE'?'text-green-400':'text-red-400'}">${l.op}</td><td class="p-4">${l.det}</td><td class="p-4 text-right">${l.mt.toLocaleString()} FCFA</td></tr>`).join('');
+    }
+
     function renderArchives() {
-        document.getElementById('archives-grid').innerHTML = db.archives.slice().reverse().map(a => `
+        document.getElementById('archives-grid').innerHTML = db.archives.map(a => `
             <div class="card-luxury p-4">
                 <p class="text-gold font-bold text-xs uppercase">${a.titre}</p>
-                <p class="text-[9px] text-gray-400">${a.date} | ${a.mt.toLocaleString()} FCFA</p>
+                <p class="text-[9px]">${a.date}</p>
                 <button onclick='generatePDF("${a.type}", ${JSON.stringify(a.data)}, ${a.type.includes('ACHAT')})' class="mt-4 w-full bg-white/5 py-2 text-[8px] font-bold">RÉIMPRIMER</button>
             </div>`).join('');
     }
 
-    loadDataFromCloud();
+    // --- PDF ENGINE ---
+    function generatePDF(titre, data, isAchat) {
+        document.getElementById('pdf-header-title').innerText = titre;
+        document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString();
+        let html = '';
+        if(isAchat) {
+            html += `<div class="pdf-section-title">Acquisition</div>`;
+            html += pdfRow("Modèle", data.marque) + pdfRow("Total", data.total_acq, true);
+        } else {
+            html += `<div class="pdf-section-title">Facturation Client</div>`;
+            html += pdfRow("Nom", data.nom) + pdfRow("Véhicule", data.marque);
+            html += pdfRow("Prix Vente", data.total, true) + pdfRow("Payé", data.paye, true) + pdfRow("Reste", data.reste, true);
+        }
+        document.getElementById('pdf-body').innerHTML = html;
+        const opt = { margin:0, filename: titre+'.pdf', html2canvas:{scale:3}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} };
+        html2pdf().from(document.getElementById('pdf-render-zone')).set(opt).save();
+    }
+
+    function pdfRow(l, v, m=false) { return `<div class="pdf-grid"><span class="pdf-lbl">${l}</span><span class="pdf-val">${m?Number(v).toLocaleString()+' FCFA':v}</span></div>`; }
+    function closeMaster() { document.getElementById('master-edit-zone').classList.add('hidden'); document.getElementById('master-view').classList.remove('hidden'); }
+
+    // --- CLOCK ---
+    function updateClock() {
+        document.getElementById('real-date').innerText = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('real-time').innerText = new Date().toLocaleTimeString('fr-FR');
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    // INITIALISATION
+    syncCloud();
     lucide.createIcons();
 </script>
 </body>
