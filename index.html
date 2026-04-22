@@ -13,144 +13,36 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        :root { --gold: #D4AF37; --dark: #121212; }
+        body { background-color: var(--dark); color: #e0e0e0; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
 
-        :root {
-            --gold: #D4AF37;
-            --dark: #121212;
-            --matte: #1e1e1f;
-        }
-
-        body {
-            background-color: var(--dark);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            margin: 0;
-        }
-
-        /* Animation de fond */
         .bg-animate {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(rgba(18,18,18,0.92), rgba(18,18,18,0.92)), 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(rgba(18,18,18,0.95), rgba(18,18,18,0.95)), 
                         url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1920');
-            background-size: cover;
-            animation: pan 60s infinite alternate linear;
+            background-size: cover; animation: pan 60s infinite alternate linear;
         }
+        @keyframes pan { from { background-position: left center; } to { background-position: right center; } }
 
-        @keyframes pan {
-            from { background-position: left center; }
-            to { background-position: right center; }
-        }
+        .sidebar { width: 320px; background: rgba(30, 30, 31, 0.98); border-right: 1px solid rgba(212, 175, 55, 0.15); backdrop-filter: blur(20px); height: 100vh; display: flex; flex-direction: column; }
+        .main-content { flex: 1; height: 100vh; overflow-y: auto; padding: 3rem; }
+        .nav-link { transition: all 0.3s; border-left: 4px solid transparent; color: #777; cursor: pointer; display: flex; align-items: center; padding: 1.2rem 2rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1.5px; }
+        .nav-link:hover, .nav-link.active { background: rgba(212, 175, 55, 0.08); border-left: 4px solid var(--gold); color: var(--gold); }
 
-        /* Sidebar & Layout */
-        .sidebar {
-            width: 320px;
-            background: rgba(30, 30, 31, 0.98);
-            border-right: 1px solid rgba(212, 175, 55, 0.15);
-            backdrop-filter: blur(20px);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .main-content {
-            flex: 1;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 4rem;
-        }
-
-        .nav-link {
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
-            color: #777;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 1.25rem 2rem;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(212, 175, 55, 0.08);
-            border-left: 4px solid var(--gold);
-            color: var(--gold);
-        }
-
-        /* UI Components */
-        .card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-        }
-
-        label {
-            display: block;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--gold);
-            font-weight: 700;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-
-        input, select, textarea {
-            background: rgba(0, 0, 0, 0.3) !important;
-            border: 1px solid rgba(212, 175, 55, 0.2) !important;
-            color: white !important;
-            padding: 14px !important;
-            border-radius: 8px !important;
-            width: 100%;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        input:focus { border-color: var(--gold) !important; background: rgba(0,0,0,0.5) !important; }
-
-        .btn-gold {
-            background: var(--gold);
-            color: var(--dark);
-            font-weight: 800;
-            padding: 1.2rem;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-
-        .btn-gold:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(212, 175, 55, 0.3);
-        }
+        .card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; }
+        label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+        input, select { background: rgba(0, 0, 0, 0.3) !important; border: 1px solid rgba(212, 175, 55, 0.2) !important; color: white !important; padding: 12px !important; border-radius: 8px !important; width: 100%; outline: none; }
+        
+        .btn-gold { background: var(--gold); color: var(--dark); font-weight: 800; padding: 1rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s; cursor: pointer; border: none; width: 100%; }
+        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
 
         .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: slideUp 0.5s ease-out; }
+        .tab-pane.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Table Design */
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        th { text-align: left; color: #555; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; padding: 1rem 1.5rem; }
-        td { background: rgba(255,255,255,0.02); padding: 1.25rem 1.5rem; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); }
-        td:first-child { border-left: 1px solid rgba(255,255,255,0.03); border-radius: 10px 0 0 10px; }
-        td:last-child { border-right: 1px solid rgba(255,255,255,0.03); border-radius: 0 10px 10px 0; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
+        th { text-align: left; color: #555; font-size: 10px; text-transform: uppercase; padding: 1rem; }
+        td { background: rgba(255,255,255,0.03); padding: 1rem; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -159,142 +51,126 @@
 
     <div class="flex h-screen">
         <aside class="sidebar">
-            <div class="p-12 mb-4">
-                <h1 class="text-6xl font-black tracking-tighter" style="color: var(--gold); line-height: 0.8;">ECF</h1>
-                <p class="text-[10px] text-gray-500 uppercase tracking-[3px] mt-4 font-bold">
-                    ENTREPRISES CISSÉ & FRÈRES
-                </p>
-                <div class="w-12 h-[3px] bg-gold mt-6" style="background-color: var(--gold);"></div>
+            <div class="p-10 mb-4">
+                <h1 class="text-6xl font-black tracking-tighter" style="color: var(--gold);">ECF</h1>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[3px] font-bold">CISSÉ & FRÈRES</p>
             </div>
-
-            <nav class="flex-1 space-y-1">
+            <nav class="flex-1">
                 <div onclick="switchTab('achat')" id="link-achat" class="nav-link active"><i data-lucide="shopping-cart" class="mr-4 w-5"></i> ACHAT</div>
                 <div onclick="switchTab('vente')" id="link-vente" class="nav-link"><i data-lucide="key-round" class="mr-4 w-5"></i> VENTE</div>
                 <div onclick="switchTab('encaissement')" id="link-encaissement" class="nav-link"><i data-lucide="receipt" class="mr-4 w-5"></i> ENCAISSEMENT</div>
                 <div onclick="switchTab('historique')" id="link-historique" class="nav-link"><i data-lucide="activity" class="mr-4 w-5"></i> HISTORIQUE</div>
                 <div onclick="switchTab('archives')" id="link-archives" class="nav-link"><i data-lucide="database" class="mr-4 w-5"></i> ARCHIVES</div>
+                <div onclick="switchTab('master')" id="link-master" class="nav-link text-red-500 mt-10"><i data-lucide="shield-check" class="mr-4 w-5"></i> MASTER</div>
             </nav>
-
-            <div class="p-8 border-t border-white/5">
-                <div onclick="switchTab('master')" id="link-master" class="nav-link text-red-500 hover:text-red-400">
-                    <i data-lucide="shield-check" class="mr-4 w-5"></i> GESTION MASTER
-                </div>
-            </div>
         </aside>
 
         <main class="main-content">
-            
-            <div class="flex justify-between items-center mb-12 card py-8 px-12">
-                <div id="live-clock" class="text-xs font-mono tracking-[4px] text-gray-500"></div>
-                <div class="flex gap-20">
-                    <div class="text-right">
-                        <span class="block text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest">Total Sorties</span>
-                        <span id="stat-out" class="text-3xl font-bold text-red-500">0 FCFA</span>
-                    </div>
-                    <div class="text-right border-l border-white/10 pl-20">
-                        <span class="block text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-widest">Total Entrées</span>
-                        <span id="stat-in" class="text-3xl font-bold text-green-500">0 FCFA</span>
-                    </div>
+            <div class="flex justify-between items-center mb-10 card py-6 px-10">
+                <div id="live-clock" class="text-xs font-mono text-gray-500 tracking-widest"></div>
+                <div class="flex gap-16">
+                    <div class="text-right"><span class="text-[10px] text-gray-500 font-bold uppercase block">Sorties</span><span id="stat-out" class="text-2xl font-bold text-red-500">0 FCFA</span></div>
+                    <div class="text-right border-l border-white/10 pl-16"><span class="text-[10px] text-gray-500 font-bold uppercase block">Entrées</span><span id="stat-in" class="text-2xl font-bold text-green-500">0 FCFA</span></div>
+                    <div class="text-right border-l border-white/10 pl-16"><span class="text-[10px] text-gray-500 font-bold uppercase block">Bénéfices</span><span id="stat-net" class="text-2xl font-bold text-white">0 FCFA</span></div>
                 </div>
             </div>
 
             <section id="achat" class="tab-pane active">
-                <h2 class="text-4xl font-light mb-10 tracking-tighter uppercase">Nouveau <span class="font-bold text-gold" style="color:var(--gold)">Achat Véhicule</span></h2>
+                <h2 class="text-4xl font-light mb-8 uppercase tracking-tighter">Nouvel <span class="font-bold" style="color:var(--gold)">Achat</span></h2>
                 <div class="card">
-                    <form id="form-achat" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="col-span-1 lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div><label>Désignation / Marque</label><input type="text" name="marque" required placeholder="Ex: Toyota Land Cruiser 2024"></div>
-                            <div><label>Nom de l'Acheteur</label><input type="text" name="acheteur" required></div>
-                            <div><label>Montant du Véhicule (Prix d'achat)</label><input type="number" name="montant" class="calc-in" value="0"></div>
-                            <div><label>Frais de Réparation</label><input type="number" name="repa" class="calc-in" value="0"></div>
-                            <div><label>Frais de Transport / Logistique</label><input type="number" name="trans" class="calc-in" value="0"></div>
-                            <div><label>Frais de Douane</label><input type="number" name="douane" class="calc-in" value="0"></div>
-                            <div><label>Frais Annexes Douane</label><input type="number" name="annex" class="calc-in" value="0"></div>
-                            <div><label>Date d'achat</label><input type="date" name="date_achat" required></div>
-                        </div>
-                        
-                        <div class="bg-black/40 p-8 rounded-2xl flex flex-col justify-center items-center border border-yellow-700/20 text-center">
-                            <span class="text-xs text-gray-400 uppercase tracking-widest font-bold">Coût d'Acquisition Total</span>
-                            <div id="a_total_live" class="text-5xl font-black my-6" style="color:var(--gold)">0 FCFA</div>
-                            <button type="submit" class="btn-gold">Valider & Générer PDF</button>
+                    <form id="form-achat" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div><label>Marque / Modèle</label><input type="text" name="marque" required></div>
+                        <div><label>Acheteur</label><input type="text" name="acheteur" required></div>
+                        <div><label>Prix Véhicule</label><input type="number" name="montant" class="calc-in" value="0"></div>
+                        <div><label>Réparation</label><input type="number" name="repa" class="calc-in" value="0"></div>
+                        <div><label>Transport</label><input type="number" name="trans" class="calc-in" value="0"></div>
+                        <div><label>Douane</label><input type="number" name="douane" class="calc-in" value="0"></div>
+                        <div><label>Frais Annexes</label><input type="number" name="annex" class="calc-in" value="0"></div>
+                        <div><label>Date</label><input type="date" name="date_achat" required></div>
+                        <div class="lg:col-span-3 bg-black/40 p-6 rounded-xl flex justify-between items-center border border-yellow-700/20">
+                            <div><span class="text-xs text-gray-400 font-bold">INVESTISSEMENT TOTAL</span><div id="a_total_live" class="text-4xl font-black text-gold" style="color:var(--gold)">0 FCFA</div></div>
+                            <button type="submit" class="btn-gold w-1/3">Valider l'Achat</button>
                         </div>
                     </form>
                 </div>
             </section>
 
             <section id="vente" class="tab-pane">
-                <h2 class="text-4xl font-light mb-10 tracking-tighter uppercase">Nouvelle <span class="font-bold text-gold" style="color:var(--gold)">Vente</span></h2>
+                <h2 class="text-4xl font-light mb-8 uppercase tracking-tighter">Nouvelle <span class="font-bold" style="color:var(--gold)">Vente</span></h2>
                 <div class="card">
-                    <form id="form-vente" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="md:col-span-3 border-b border-white/5 pb-4 mb-2"><h3 class="text-xs font-bold text-gold tracking-widest uppercase">1. État Civil du Client</h3></div>
-                        <div><label>Nom & Prénoms</label><input type="text" name="v_nom" required></div>
-                        <div><label>Date & Lieu de Naissance</label><input type="text" name="v_naiss"></div>
-                        <div><label>Contact Téléphonique</label><input type="text" name="v_tel" required></div>
+                    <form id="form-vente" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-3 border-b border-white/5 pb-2"><h3 class="text-xs font-bold text-gold">INFOS CLIENT</h3></div>
+                        <div><label>Nom Complet</label><input type="text" name="v_nom" required></div>
+                        <div><label>Contact</label><input type="text" name="v_tel" required></div>
                         <div><label>Nationalité</label><input type="text" name="v_nat"></div>
                         <div><label>Profession</label><input type="text" name="v_prof"></div>
-                        <div><label>Domicile Habituel</label><input type="text" name="v_dom"></div>
-                        <div><label>Type & N° Pièce</label><input type="text" name="v_piece" placeholder="CNI / Passeport"></div>
-                        <div><label>Date de Délivrance</label><input type="date" name="v_piece_date"></div>
+                        <div><label>Domicile</label><input type="text" name="v_dom"></div>
+                        <div><label>N° Pièce</label><input type="text" name="v_piece"></div>
                         
-                        <div class="md:col-span-3 border-b border-white/5 pb-4 mb-2 mt-6"><h3 class="text-xs font-bold text-gold tracking-widest uppercase">2. Détails de la Vente</h3></div>
-                        <div><label>Véhicule Concerné</label><select name="v_car" id="v_car_select" required></select></div>
-                        <div><label>Type de Paiement</label>
-                            <select name="v_type" id="v_type_select" onchange="toggleEchelon(this.value)">
-                                <option value="soldé">Comptant (Soldé)</option>
-                                <option value="échelonné">Vente Échelonnée</option>
+                        <div class="md:col-span-3 border-b border-white/5 pb-2 mt-4"><h3 class="text-xs font-bold text-gold">OBJET & FINANCE</h3></div>
+                        <div><label>Véhicule</label><select name="v_car" id="v_car_select" required></select></div>
+                        <div><label>Type Paiement</label>
+                            <select name="v_type" id="v_type_select" onchange="toggleEch(this.value)">
+                                <option value="soldé">Soldé (Comptant)</option>
+                                <option value="échelonné">Échelonné</option>
+                            </select>
+                        </div>
+                        <div><label>Mode de Paiement</label>
+                            <select name="v_mode">
+                                <option>Espèces</option><option>Virement</option><option>Chèque</option>
                             </select>
                         </div>
                         <div><label>Prix de Vente Total</label><input type="number" name="v_total" required></div>
                         
-                        <div id="ech-fields" class="hidden md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 bg-yellow-700/5 p-8 rounded-xl border border-yellow-700/10">
-                            <div><label>Premier Versement (Acompte)</label><input type="number" name="v_verse" value="0"></div>
-                            <div><label>Échéance Prochain Paiement</label><input type="date" name="v_next"></div>
+                        <div id="box-ech" class="hidden md:col-span-3 grid grid-cols-2 gap-6 bg-white/5 p-4 rounded">
+                            <div><label>Montant Versé (Acompte)</label><input type="number" name="v_verse" value="0"></div>
+                            <div><label>Date Prochain Paiement</label><input type="date" name="v_next"></div>
                         </div>
-
-                        <div><label>Mode de Règlement</label>
-                            <select name="v_mode">
-                                <option>Espèces</option><option>Virement</option><option>Chèque</option><option>Mobile Money</option>
-                            </select>
-                        </div>
-                        <div><label>Date de Transaction</label><input type="date" name="v_date" required></div>
                         
-                        <div class="md:col-span-3 pt-6"><button type="submit" class="btn-gold">Finaliser la vente & Créer le contrat PDF</button></div>
+                        <div><label>Date de Vente</label><input type="date" name="v_date" required></div>
+                        <div class="md:col-span-3 mt-4"><button type="submit" class="btn-gold">Générer Contrat & Vente</button></div>
                     </form>
                 </div>
             </section>
 
             <section id="encaissement" class="tab-pane">
-                <h2 class="text-4xl font-light mb-10 tracking-tighter uppercase">Suivi des <span class="font-bold text-gold" style="color:var(--gold)">Encaissements</span></h2>
+                <h2 class="text-4xl font-light mb-8 uppercase tracking-tighter">Suivi <span class="font-bold">Encaissements</span></h2>
                 <div class="card overflow-x-auto">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Client</th>
-                                <th>Véhicule</th>
-                                <th>Montant Payé</th>
-                                <th>Reste à Payer</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="encaissement-body"></tbody>
+                    <table id="table-pay">
+                        <thead><tr><th>Client</th><th>Véhicule</th><th>Dû</th><th>Versé</th><th>Reste</th><th>Action</th></tr></thead>
+                        <tbody id="pay-body"></tbody>
                     </table>
                 </div>
             </section>
 
             <section id="historique" class="tab-pane">
-                <div class="flex justify-between items-end mb-10">
-                    <h2 class="text-4xl font-light tracking-tighter uppercase">Journal <span class="font-bold">Général</span></h2>
+                <div class="flex justify-between items-end mb-8">
+                    <h2 class="text-4xl font-light uppercase tracking-tighter">Historique <span class="font-bold">Général</span></h2>
                     <div class="flex gap-4 items-end card py-4 px-6 mb-0">
-                        <div><label>Du</label><input type="date" id="h_start" style="width:160px; padding:10px!important"></div>
-                        <div><label>Au</label><input type="date" id="h_end" style="width:160px; padding:10px!important"></div>
-                        <button onclick="exportPeriodPDF()" class="btn-gold px-8 py-3 text-[10px] w-auto">Exporter Période</button>
+                        <div><label>Du</label><input type="date" id="h_start" style="width:140px"></div>
+                        <div><label>Au</label><input type="date" id="h_end" style="width:140px"></div>
+                        <button onclick="exportHistory()" class="btn-gold px-6 w-auto text-xs">Exporter</button>
                     </div>
                 </div>
                 <div class="card overflow-x-auto">
-                    <table id="history-table">
-                        <thead><tr><th>Date</th><th>Type</th><th>Libellé / Détails</th><th>Montant</th><th>Action</th></tr></thead>
+                    <table>
+                        <thead><tr><th>Date</th><th>Type</th><th>Détails</th><th>Montant</th></tr></thead>
                         <tbody id="history-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="archives" class="tab-pane">
+                <h2 class="text-4xl font-light mb-8 uppercase tracking-tighter">Archives <span class="font-bold">Documents</span></h2>
+                <div id="archive-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </section>
+
+            <section id="master" class="tab-pane">
+                <h2 class="text-4xl font-light mb-8 uppercase tracking-tighter text-red-500">Gestion <span class="font-bold">Master</span></h2>
+                <div class="card bg-red-900/5">
+                    <table id="master-table">
+                        <thead><tr><th>ID</th><th>Type</th><th>Libellé</th><th>Montant</th><th>Action</th></tr></thead>
+                        <tbody id="master-body"></tbody>
                     </table>
                 </div>
             </section>
@@ -303,163 +179,168 @@
     </div>
 
     <script>
-        // CONFIGURATION SUPABASE
+        // CONFIG SUPABASE (À REMPLACER PAR TES CLÉS)
         const { createClient } = supabase;
-        const _sb = createClient('https://asewhxxlkxktjucmaknd.supabase.co', 'sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg');
+        const _sb = createClient('URL_SUPABASE', 'CLE_ANON');
 
-        // 1. CALCULATEUR DYNAMIQUE ACHAT
-        document.querySelectorAll('.calc-in').forEach(input => {
-            input.addEventListener('input', () => {
+        // CALCULATEUR ACHAT
+        document.querySelectorAll('.calc-in').forEach(i => {
+            i.addEventListener('input', () => {
                 const f = document.getElementById('form-achat');
-                const total = Number(f.montant.value || 0) + 
-                              Number(f.repa.value || 0) + 
-                              Number(f.trans.value || 0) + 
-                              Number(f.douane.value || 0) + 
-                              Number(f.annex.value || 0);
-                document.getElementById('a_total_live').innerText = total.toLocaleString('fr-FR') + " FCFA";
+                const t = Number(f.montant.value)+Number(f.repa.value)+Number(f.trans.value)+Number(f.douane.value)+Number(f.annex.value);
+                document.getElementById('a_total_live').innerText = t.toLocaleString() + " FCFA";
             });
         });
 
-        // 2. NAVIGATION
+        // NAVIGATION
         function switchTab(id) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('link-'+id).classList.add('active');
             
-            if(id === 'vente') loadVehicles();
-            if(id === 'historique') refreshHistory();
-            if(id === 'encaissement') refreshPayments();
+            if(id === 'vente') loadCars();
+            if(id === 'historique') loadHistory();
+            if(id === 'encaissement') loadPayments();
+            if(id === 'archives') loadArchives();
+            if(id === 'master') loadMaster();
         }
 
-        function toggleEchelon(val) {
-            document.getElementById('ech-fields').style.display = (val === 'échelonné') ? 'grid' : 'none';
-        }
+        function toggleEch(v) { document.getElementById('box-ech').style.display = v === 'échelonné' ? 'grid' : 'none'; }
 
-        // 3. GENERATION PDF PRO (Marge 30mm)
-        async function generatePDF(title, dataMap) {
+        // PDF VENTE STRUCTURE (Client / Objet / Finance)
+        async function generateVentePDF(f) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const m = 30; // 30mm margin
+            const m = 30; // Marges 30mm
 
-            // Titre Principal
             doc.setFontSize(18);
-            doc.setTextColor(30, 30, 31);
-            doc.text(title.toUpperCase(), 105, m + 10, { align: 'center' });
+            doc.text("CONTRAT DE VENTE DE VÉHICULE", 105, m + 10, { align: 'center' });
 
-            // Table des données
-            const rows = Object.entries(dataMap).map(([k, v]) => [k, v]);
+            // 1. BLOC INFORMATIONS CLIENT
             doc.autoTable({
-                startY: m + 25,
-                margin: { top: m, bottom: m },
-                styles: { fontSize: 13, cellPadding: 6 },
+                startY: m + 25, margin: m,
+                head: [['1. INFORMATIONS CLIENT']],
+                body: [
+                    ['Nom Complet', f.v_nom.value],
+                    ['Contact', f.v_tel.value],
+                    ['Nationalité', f.v_nat.value],
+                    ['Profession', f.v_prof.value],
+                    ['Domicile', f.v_dom.value],
+                    ['N° Pièce', f.v_piece.value]
+                ],
                 headStyles: { fillColor: [30, 30, 31], textColor: [212, 175, 55] },
-                body: rows,
-                theme: 'striped'
+                styles: { fontSize: 11 }
             });
 
-            doc.save(`ECF_${title.replace(/ /g,'_')}_${Date.now()}.pdf`);
+            // 2. BLOC OBJET DE LA VENTE
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 10, margin: m,
+                head: [['2. OBJET DE LA VENTE']],
+                body: [
+                    ['Véhicule', f.v_car.value],
+                    ['Date de Vente', f.v_date.value],
+                    ['Mode de Paiement', f.v_mode.value],
+                    ['Type de Paiement', f.v_type.value]
+                ],
+                headStyles: { fillColor: [30, 30, 31], textColor: [212, 175, 55] },
+                styles: { fontSize: 11 }
+            });
+
+            // 3. BLOC SITUATION FINANCIÈRE
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 10, margin: m,
+                head: [['3. SITUATION FINANCIÈRE']],
+                body: [
+                    ['Prix de Vente Total', f.v_total.value + " FCFA"],
+                    ['Montant Versé ce jour', (f.v_verse.value || f.v_total.value) + " FCFA"],
+                    ['Reste à Payer', (f.v_total.value - (f.v_verse.value || f.v_total.value)) + " FCFA"],
+                    ['Date Prochain Paiement', f.v_next.value || 'N/A']
+                ],
+                headStyles: { fillColor: [30, 30, 31], textColor: [212, 175, 55] },
+                styles: { fontSize: 11 }
+            });
+
+            const name = `VENTE_${f.v_nom.value}_${Date.now()}.pdf`;
+            doc.save(name);
+            await _sb.from('archives').insert([{ name: name, type: 'VENTE' }]);
         }
 
-        // 4. LOGIQUE ACHAT
+        // LOGIQUE ACHAT
         document.getElementById('form-achat').addEventListener('submit', async (e) => {
             e.preventDefault();
             const f = e.target;
-            const total = Number(f.montant.value) + Number(f.repa.value) + Number(f.trans.value) + Number(f.douane.value) + Number(f.annex.value);
-            
-            const { data, error } = await _sb.from('achats').insert([{
-                marque: f.marque.value,
-                acheteur: f.acheteur.value,
-                montant_vehicule: Number(f.montant.value),
-                cout_total: total,
-                created_at: f.date_achat.value
+            const t = Number(f.montant.value)+Number(f.repa.value)+Number(f.trans.value)+Number(f.douane.value)+Number(f.annex.value);
+            const { error } = await _sb.from('achats').insert([{
+                marque: f.marque.value, acheteur: f.acheteur.value, cout_total: t, created_at: f.date_achat.value
             }]);
-
-            if(!error) {
-                await generatePDF("REÇU D'ACHAT", {
-                    "Véhicule": f.marque.value,
-                    "Acheteur": f.acheteur.value,
-                    "Montant Achat": f.montant.value + " FCFA",
-                    "Frais Douane": f.douane.value + " FCFA",
-                    "TOTAL INVESTI": total + " FCFA",
-                    "Date": f.date_achat.value
-                });
-                alert("Véhicule enregistré avec succès !");
-                f.reset();
-                updateStats();
-            } else { alert("Erreur: " + error.message); }
+            if(!error) { alert("Achat enregistré !"); f.reset(); updateStats(); }
         });
 
-        // 5. LOGIQUE VENTE
+        // LOGIQUE VENTE
         document.getElementById('form-vente').addEventListener('submit', async (e) => {
             e.preventDefault();
             const f = e.target;
             const payload = {
-                nom_acheteur: f.v_nom.value,
-                contact: f.v_tel.value,
-                vehicule: f.v_car.value,
-                type_vente: f.v_type.value,
-                montant_total: Number(f.v_total.value),
+                nom_acheteur: f.v_nom.value, contact: f.v_tel.value, vehicule: f.v_car.value,
+                type_vente: f.v_type.value, montant_total: Number(f.v_total.value),
                 montant_verse: Number(f.v_verse.value || f.v_total.value),
-                date_vente: f.v_date.value,
-                nationalite: f.v_nat.value,
-                profession: f.v_prof.value,
-                domicile: f.v_dom.value,
-                piece_identite: f.v_piece.value
+                date_vente: f.v_date.value, date_prochain_paiement: f.v_next.value
             };
-
             const { error } = await _sb.from('ventes').insert([payload]);
-            if(!error) {
-                await generatePDF("CONTRAT DE VENTE", {
-                    "Client": f.v_nom.value,
-                    "Contact": f.v_tel.value,
-                    "Véhicule": f.v_car.value,
-                    "Type de Vente": f.v_type.value,
-                    "Montant Total": f.v_total.value + " FCFA",
-                    "Versé ce jour": (f.v_verse.value || f.v_total.value) + " FCFA",
-                    "Date": f.v_date.value
-                });
-                alert("Vente validée !");
-                f.reset();
-                updateStats();
-            } else { alert("Erreur: " + error.message); }
+            if(!error) { await generateVentePDF(f); alert("Vente validée !"); f.reset(); updateStats(); }
         });
 
-        // 6. LOGIQUE HISTORIQUE & STATS
+        // REFRESH DATA FUNCTIONS
         async function updateStats() {
             const { data: a } = await _sb.from('achats').select('cout_total');
             const { data: v } = await _sb.from('ventes').select('montant_total');
-            const s = (a||[]).reduce((sum, i) => sum + i.cout_total, 0);
-            const e = (v||[]).reduce((sum, i) => sum + i.montant_total, 0);
+            const s = (a||[]).reduce((x, i) => x + i.cout_total, 0);
+            const e = (v||[]).reduce((x, i) => x + i.montant_total, 0);
             document.getElementById('stat-out').innerText = s.toLocaleString() + " FCFA";
             document.getElementById('stat-in').innerText = e.toLocaleString() + " FCFA";
+            document.getElementById('stat-net').innerText = (e - s).toLocaleString() + " FCFA";
         }
 
-        async function refreshHistory() {
-            const { data: v } = await _sb.from('ventes').select('*').order('date_vente', { ascending: false });
-            const { data: a } = await _sb.from('achats').select('*').order('created_at', { ascending: false });
-            
-            const rows = [
-                ...(v||[]).map(r => `<tr><td>${r.date_vente}</td><td class="text-green-500 font-bold">VENTE</td><td>${r.vehicule} / ${r.nom_acheteur}</td><td class="font-mono">${r.montant_total.toLocaleString()}</td><td><button class="underline text-xs opacity-50">DÉTAILS</button></td></tr>`),
-                ...(a||[]).map(r => `<tr><td>${new Date(r.created_at).toLocaleDateString()}</td><td class="text-red-500 font-bold">ACHAT</td><td>${r.marque}</td><td class="font-mono">${r.cout_total.toLocaleString()}</td><td><button class="underline text-xs opacity-50">DÉTAILS</button></td></tr>`)
-            ];
-            document.getElementById('history-body').innerHTML = rows.join('');
-        }
-
-        async function loadVehicles() {
+        async function loadCars() {
             const { data } = await _sb.from('achats').select('marque');
-            const sel = document.getElementById('v_car_select');
-            sel.innerHTML = (data||[]).map(c => `<option value="${c.marque}">${c.marque}</option>`).join('');
+            document.getElementById('v_car_select').innerHTML = (data||[]).map(c => `<option value="${c.marque}">${c.marque}</option>`).join('');
         }
 
-        // INITIALISATION
-        window.onload = () => {
-            lucide.createIcons();
-            updateStats();
-            setInterval(() => {
-                document.getElementById('live-clock').innerText = new Date().toLocaleString('fr-FR', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit', second:'2-digit' });
-            }, 1000);
-        };
+        async function loadHistory() {
+            const { data: v } = await _sb.from('ventes').select('*');
+            const { data: a } = await _sb.from('achats').select('*');
+            const h = [
+                ...(v||[]).map(r => `<tr><td>${r.date_vente}</td><td class="text-green-500">VENTE</td><td>${r.vehicule}</td><td>${r.montant_total.toLocaleString()}</td></tr>`),
+                ...(a||[]).map(r => `<tr><td>${new Date(r.created_at).toLocaleDateString()}</td><td class="text-red-500">ACHAT</td><td>${r.marque}</td><td>${r.cout_total.toLocaleString()}</td></tr>`)
+            ];
+            document.getElementById('history-body').innerHTML = h.join('');
+        }
+
+        async function loadPayments() {
+            const { data } = await _sb.from('ventes').select('*').eq('type_vente', 'échelonné');
+            document.getElementById('pay-body').innerHTML = (data||[]).map(r => `
+                <tr><td>${r.nom_acheteur}</td><td>${r.vehicule}</td><td>${r.montant_total}</td><td>${r.montant_verse}</td><td>${r.montant_total - r.montant_verse}</td>
+                <td><button onclick="addPay('${r.id}')" class="text-gold underline">Encaisser</button></td></tr>
+            `).join('');
+        }
+
+        async function loadArchives() {
+            const { data } = await _sb.from('archives').select('*').order('created_at', { ascending: false });
+            document.getElementById('archive-list').innerHTML = (data||[]).map(d => `
+                <div class="card p-4 flex justify-between"><span>${d.name}</span><span class="text-gray-500 text-xs">${d.type}</span></div>
+            `).join('');
+        }
+
+        async function loadMaster() {
+            const { data } = await _sb.from('ventes').select('*');
+            document.getElementById('master-body').innerHTML = (data||[]).map(r => `
+                <tr><td>${r.id.slice(0,8)}</td><td>VENTE</td><td>${r.nom_acheteur}</td><td>${r.montant_total}</td>
+                <td><button class="text-red-500">Supprimer</button></td></tr>
+            `).join('');
+        }
+
+        window.onload = () => { lucide.createIcons(); updateStats(); setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleString(); }, 1000); };
     </script>
 </body>
 </html>
