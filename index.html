@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECF | Système de Gestion Automobile v14</title>
+    <title>ECF | Système de Gestion Automobile Premium</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -12,38 +12,42 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
         :root { --noir-malt: #0a0a0a; --or-deep: #C5A059; }
         
         body { font-family: 'Montserrat', sans-serif; background-color: var(--noir-malt); color: #E5E5E5; margin: 0; overflow-x: hidden; }
+        
+        /* Fond d'écran */
         .bg-custom { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: url('https://i.pinimg.com/736x/2b/43/6e/2b436e22f281987d603a1f9e61284725.jpg') no-repeat center center fixed; background-size: cover; filter: brightness(8%) grayscale(90%); }
 
         .font-luxury { font-family: 'Cinzel', serif; }
         .text-gold { color: var(--or-deep); }
+        
         .sidebar { background: rgba(5, 5, 5, 0.98); border-right: 1px solid rgba(197, 160, 89, 0.2); backdrop-filter: blur(15px); }
         .card-luxury { background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(197, 160, 89, 0.15); backdrop-filter: blur(10px); border-radius: 8px; }
 
         label { display: block; font-size: 10px; text-transform: uppercase; color: #947436; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
-        input, select, textarea { background: rgba(0, 0, 0, 0.6) !important; border: 1px solid #333 !important; color: white !important; padding: 10px !important; width: 100%; font-size: 13px; border-radius: 4px; }
-        input:focus, select:focus { border-color: var(--or-deep) !important; outline: none; }
+        input, select, textarea { background: rgba(0, 0, 0, 0.6) !important; border: 1px solid #333 !important; color: white !important; padding: 10px !important; width: 100%; font-size: 13px; border-radius: 4px; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--or-deep) !important; outline: none; box-shadow: 0 0 10px rgba(197, 160, 89, 0.1); }
         
         .btn-gold { background: linear-gradient(135deg, #C5A059 0%, #947436 100%); color: #000; font-weight: 800; transition: 0.2s; padding: 12px; text-transform: uppercase; border-radius: 4px; cursor: pointer; border:none; text-align: center; width: 100%; }
-        .btn-gold:hover { filter: brightness(1.2); }
+        .btn-gold:hover { filter: brightness(1.2); transform: scale(1.01); }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .nav-item { border-left: 3px solid transparent; transition: 0.3s; }
-        .nav-item.active { background: rgba(197, 160, 89, 0.1); border-left: 3px solid var(--or-deep); color: var(--or-deep); }
+        .nav-item { border-left: 3px solid transparent; transition: 0.3s; opacity: 0.6; }
+        .nav-item.active { background: rgba(197, 160, 89, 0.1); border-left: 3px solid var(--or-deep); color: var(--or-deep); opacity: 1; }
 
-        /* PDF - ESPACES VIDES 30MM */
-        #pdf-render-zone { width: 210mm; min-height: 297mm; padding: 30mm 25mm 30mm 25mm; background: white; color: black; font-family: 'Times New Roman', serif; position: relative; }
-        .pdf-title-main { text-align: center; font-size: 20pt; font-weight: bold; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; }
-        .pdf-section-title { background: #000; color: white; padding: 8px 15px; font-weight: bold; margin-top: 20px; text-transform: uppercase; font-size: 11pt; }
-        .pdf-grid { display: grid; grid-template-columns: 1.5fr 1fr; border-bottom: 1px solid #ddd; padding: 8px 0; }
-        .pdf-lbl { font-size: 10pt; color: #333; }
+        /* PDF CONFIGURATION - MARGES 30MM POUR PAPIER EN-TETE */
+        #pdf-render-zone { width: 210mm; min-height: 297mm; padding: 30mm 20mm 30mm 20mm; background: white; color: black; font-family: 'Times New Roman', serif; position: relative; }
+        .pdf-title-main { text-align: center; font-size: 18pt; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; }
+        .pdf-section-title { background: #f4f4f4; border-left: 5px solid #000; padding: 6px 15px; font-weight: bold; margin-top: 20px; text-transform: uppercase; font-size: 11pt; margin-bottom: 10px; }
+        .pdf-grid { display: grid; grid-template-columns: 1.5fr 1fr; border-bottom: 0.5px solid #eee; padding: 8px 0; }
+        .pdf-lbl { font-size: 10pt; color: #444; }
         .pdf-val { font-weight: bold; font-size: 11pt; text-align: right; }
-        .pdf-total-row { background: #f2f2f2; border: 2px solid #000; padding: 10px; margin-top: 20px; display: flex; justify-content: space-between; font-weight: bold; font-size: 12pt; }
+        .pdf-total-box { margin-top: 25px; border: 1.5px solid #000; padding: 12px; display: flex; justify-content: space-between; font-weight: bold; font-size: 12pt; background: #fafafa; }
     </style>
 </head>
 <body>
@@ -57,12 +61,12 @@
             <p class="text-[9px] uppercase tracking-[0.4em] text-gray-500 mt-2 font-bold">Cissé & Frères</p>
         </div>
         <nav class="flex-1 px-4 py-8 space-y-2">
-            <div onclick="switchTab('achat')" id="nav-achat" class="nav-item active p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="plus-circle"></i><span class="text-[10px] font-bold uppercase tracking-widest">Acquisition</span></div>
-            <div onclick="switchTab('vente')" id="nav-vente" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="shopping-cart"></i><span class="text-[10px] font-bold uppercase tracking-widest">Vente</span></div>
+            <div onclick="switchTab('achat')" id="nav-achat" class="nav-item active p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="plus-circle"></i><span class="text-[10px] font-bold uppercase tracking-widest">Achat / Stock</span></div>
+            <div onclick="switchTab('vente')" id="nav-vente" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="shopping-cart"></i><span class="text-[10px] font-bold uppercase tracking-widest">Vente / Facture</span></div>
             <div onclick="switchTab('encaissement')" id="nav-encaissement" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="banknote"></i><span class="text-[10px] font-bold uppercase tracking-widest">Encaissement</span></div>
-            <div onclick="switchTab('gestion')" id="nav-gestion" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="settings-2"></i><span class="text-[10px] font-bold uppercase tracking-widest">Gestion Master</span></div>
-            <div onclick="switchTab('journal')" id="nav-journal" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="history"></i><span class="text-[10px] font-bold uppercase tracking-widest">Journal</span></div>
-            <div onclick="switchTab('archives')" id="nav-archives" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="folder-kanban"></i><span class="text-[10px] font-bold uppercase tracking-widest">Archives</span></div>
+            <div onclick="switchTab('gestion')" id="nav-gestion" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="layout-dashboard"></i><span class="text-[10px] font-bold uppercase tracking-widest">Gestion Master</span></div>
+            <div onclick="switchTab('journal')" id="nav-journal" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="file-text"></i><span class="text-[10px] font-bold uppercase tracking-widest">Journal Flux</span></div>
+            <div onclick="switchTab('archives')" id="nav-archives" class="nav-item p-4 flex items-center gap-4 cursor-pointer hover:bg-white/5 rounded-lg"><i data-lucide="archive"></i><span class="text-[10px] font-bold uppercase tracking-widest">Archives</span></div>
         </nav>
     </aside>
 
@@ -73,86 +77,83 @@
                 <p id="real-time" class="text-2xl font-luxury"></p>
             </div>
             <div class="flex gap-12 text-right">
-                <div><p class="text-[8px] text-gray-500 uppercase">Investissements</p><p id="kpi-sorties" class="text-red-400 font-luxury">0 FCFA</p></div>
-                <div><p class="text-[8px] text-gray-500 uppercase">Encaissements</p><p id="kpi-entrees" class="text-green-400 font-luxury">0 FCFA</p></div>
-                <div class="border-l border-white/10 pl-8 font-bold"><p class="text-[8px] text-gold uppercase">Solde Net</p><p id="kpi-benefice" class="text-xl text-gold font-luxury">0 FCFA</p></div>
+                <div><p class="text-[8px] text-gray-500 uppercase">Sorties totales</p><p id="kpi-sorties" class="text-red-400 font-luxury">0 FCFA</p></div>
+                <div><p class="text-[8px] text-gray-500 uppercase">Entrées totales</p><p id="kpi-entrees" class="text-green-400 font-luxury">0 FCFA</p></div>
+                <div class="border-l border-white/10 pl-8 font-bold"><p class="text-[8px] text-gold uppercase">Bénéfice Net</p><p id="kpi-benefice" class="text-xl text-gold font-luxury">0 FCFA</p></div>
             </div>
         </header>
 
         <div class="p-10">
             <section id="achat" class="tab-content active">
-                <h2 class="text-3xl font-luxury mb-8">Acquisition Véhicule</h2>
+                <h2 class="text-3xl font-luxury mb-8">Acquisition de Véhicule</h2>
                 <form id="formAchat" class="card-luxury p-8 space-y-6">
                     <div class="grid grid-cols-2 gap-6">
-                        <div><label>Marque & Modèle</label><input type="text" id="a_marque" required></div>
-                        <div><label>Acheteur Responsable</label><input type="text" id="a_acheteur" value="ENTREPRISES CISSÉ ET FRÈRES"></div>
+                        <div><label>Désignation du Véhicule</label><input type="text" id="a_marque" required placeholder="ex: Range Rover Sport 2020"></div>
+                        <div><label>Responsable de l'Achat</label><input type="text" id="a_acheteur" value="ENTREPRISES CISSÉ ET FRÈRES"></div>
                     </div>
                     <div class="grid grid-cols-3 gap-6">
-                        <div><label>Prix Véhicule (FCFA)</label><input type="number" id="a_prix" class="calc-achat" required></div>
-                        <div><label>Réparations</label><input type="number" id="a_rep" class="calc-achat" value="0"></div>
-                        <div><label>Transport</label><input type="number" id="a_trans" class="calc-achat" value="0"></div>
-                        <div><label>Douane</label><input type="number" id="a_douane" class="calc-achat" value="0"></div>
-                        <div><label>Frais Annexe</label><input type="number" id="a_ann" class="calc-achat" value="0"></div>
-                        <div class="bg-gold/10 p-3 border border-gold/30 text-center rounded">
-                            <span class="text-gold text-[9px] font-bold">TOTAL ACQUISITION</span>
-                            <p id="total_acq" class="text-xl font-luxury text-gold">0 FCFA</p>
+                        <div><label>Prix d'Achat (FCFA)</label><input type="number" id="a_prix" class="calc-achat" required value="0"></div>
+                        <div><label>Réparations / Entretien</label><input type="number" id="a_rep" class="calc-achat" value="0"></div>
+                        <div><label>Transport / Logistique</label><input type="number" id="a_trans" class="calc-achat" value="0"></div>
+                        <div><label>Douane / Transitaire</label><input type="number" id="a_douane" class="calc-achat" value="0"></div>
+                        <div><label>Autres Frais</label><input type="number" id="a_ann" class="calc-achat" value="0"></div>
+                        <div class="bg-gold/10 p-4 border border-gold/30 text-center rounded flex flex-col justify-center">
+                            <span class="text-gold text-[9px] font-bold">COÛT DE REVIENT TOTAL</span>
+                            <p id="total_acq" class="text-2xl font-luxury text-gold">0 FCFA</p>
                         </div>
                     </div>
-                    <button type="submit" class="btn-gold">Enregistrer & Bordereau</button>
+                    <button type="submit" class="btn-gold">Enregistrer en Stock & Générer Bordereau</button>
                 </form>
             </section>
 
             <section id="vente" class="tab-content">
-                <h2 class="text-3xl font-luxury mb-8">Facturation Client</h2>
+                <h2 class="text-3xl font-luxury mb-8">Vente & Facturation</h2>
                 <form id="formVente" class="card-luxury p-8 space-y-6">
                     <div class="grid grid-cols-3 gap-4">
-                        <div><label>Nom Client</label><input type="text" id="v_nom" required></div>
-                        <div><label>Naissance</label><input type="date" id="v_naiss"></div>
-                        <div><label>Lieu Naissance</label><input type="text" id="v_lieu"></div>
+                        <div><label>Nom complet Client</label><input type="text" id="v_nom" required></div>
+                        <div><label>Date de Naissance</label><input type="date" id="v_naiss"></div>
+                        <div><label>Lieu de Naissance</label><input type="text" id="v_lieu"></div>
                         <div><label>Nationalité</label><input type="text" id="v_nat"></div>
                         <div><label>Profession</label><input type="text" id="v_prof"></div>
-                        <div><label>Domicile</label><input type="text" id="v_dom"></div>
-                        <div><label>N° Pièce</label><input type="text" id="v_id_num"></div>
-                        <div><label>Délivrée le</label><input type="date" id="v_id_date"></div>
                         <div><label>Contact</label><input type="text" id="v_contact" required></div>
                     </div>
                     <div class="grid grid-cols-3 gap-6 pt-4 border-t border-white/5">
-                        <div><label>Véhicule</label><select id="v_auto" class="text-gold" required></select></div>
-                        <div><label>Date Vente</label><input type="date" id="v_date" required></div>
-                        <div><label>Mode</label><select id="v_mode"><option>Espèce</option><option>Chèque</option><option>Virement</option></select></div>
-                        <div><label>Statut</label><select id="v_type" onchange="toggleEch()"><option value="soldé">SOLDÉ</option><option value="échelonné">ÉCHELONNÉ</option></select></div>
-                        <div><label>Prix de Vente</label><input type="number" id="v_prix_vente" required></div>
-                        <div id="box_ech" class="hidden"><label>Acompte</label><input type="number" id="v_acompte"></div>
+                        <div><label>Choisir un Véhicule en Stock</label><select id="v_auto" class="text-gold" required></select></div>
+                        <div><label>Prix de Vente Convenu (FCFA)</label><input type="number" id="v_prix_vente" required></div>
+                        <div><label>Date de la Vente</label><input type="date" id="v_date" required></div>
+                        <div><label>Type de Paiement</label><select id="v_type" onchange="toggleEch()"><option value="soldé">TOTALEMENT SOLDÉ</option><option value="échelonné">AVEC RELIQUAT</option></select></div>
+                        <div id="box_ech" class="hidden"><label>Acompte Versé (FCFA)</label><input type="number" id="v_acompte"></div>
+                        <div><label>Mode de Paiement</label><select id="v_mode"><option>Espèce</option><option>Chèque</option><option>Virement</option></select></div>
                     </div>
-                    <button type="submit" class="btn-gold">Finaliser Vente</button>
+                    <button type="submit" class="btn-gold">Valider la Vente & Imprimer Facture</button>
                 </form>
             </section>
 
             <section id="encaissement" class="tab-content">
-                <h2 class="text-3xl font-luxury mb-8">Recouvrement Reliquats</h2>
+                <h2 class="text-3xl font-luxury mb-8">Suivi des Encaissements (Reliquats)</h2>
                 <div id="encaisse-list" class="grid gap-4"></div>
             </section>
 
             <section id="gestion" class="tab-content">
                 <h2 class="text-3xl font-luxury mb-8">Gestion Master</h2>
                 <div class="grid grid-cols-2 gap-8">
-                    <div class="card-luxury p-6"><h3 class="text-gold text-xs uppercase mb-4">Acquisitions</h3><div id="master-achats-list"></div></div>
-                    <div class="card-luxury p-6"><h3 class="text-gold text-xs uppercase mb-4">Ventes</h3><div id="master-ventes-list"></div></div>
+                    <div class="card-luxury p-6"><h3 class="text-gold uppercase text-xs mb-4 border-b border-gold/20 pb-2">Inventaire des Achats</h3><div id="master-achats-list" class="space-y-2"></div></div>
+                    <div class="card-luxury p-6"><h3 class="text-gold uppercase text-xs mb-4 border-b border-gold/20 pb-2">Registre des Ventes</h3><div id="master-ventes-list" class="space-y-2"></div></div>
                 </div>
             </section>
 
             <section id="journal" class="tab-content">
-                <h2 class="text-3xl font-luxury mb-8">Journal Financier</h2>
+                <h2 class="text-3xl font-luxury mb-8">Journal des Flux Financiers</h2>
                 <div class="card-luxury overflow-hidden">
                     <table class="w-full text-left text-xs">
-                        <thead class="bg-black text-gold"><tr><th class="p-5">DATE</th><th class="p-5">OPÉRATION</th><th class="p-5">DÉTAILS</th><th class="p-5 text-right">MONTANT</th></tr></thead>
+                        <thead class="bg-black text-gold"><tr><th class="p-5">DATE</th><th class="p-5">TYPE D'OPÉRATION</th><th class="p-5">DÉTAILS</th><th class="p-5 text-right">MONTANT (FCFA)</th></tr></thead>
                         <tbody id="journal-body"></tbody>
                     </table>
                 </div>
             </section>
 
             <section id="archives" class="tab-content">
-                <h2 class="text-3xl font-luxury mb-8">Archives Numériques</h2>
+                <h2 class="text-3xl font-luxury mb-8">Archives des Documents</h2>
                 <div id="archives-grid" class="grid grid-cols-3 gap-6"></div>
             </section>
         </div>
@@ -161,23 +162,28 @@
 
 <div style="position: absolute; left: -9999px;">
     <div id="pdf-render-zone">
-        <div id="pdf-header-title" class="pdf-title-main"></div>
+        <div id="pdf-header-title" class="pdf-title-main">TITRE</div>
         <div id="pdf-body"></div>
-        <div style="margin-top: 60px; text-align: right;">
-            <p style="font-weight: bold;">Fait à Abidjan, le <span id="pdf-date-now"></span></p>
-            <div style="height: 100px;"></div>
-            <p style="font-weight: bold;">DIRECTION GÉNÉRALE ECF</p>
+        <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size: 9pt; font-style: italic; color: #555;">Document généré par le système ECF.</div>
+            <div style="text-align: right;">
+                <p style="font-weight: bold;">Fait à Abidjan, le <span id="pdf-date-now"></span></p>
+                <div style="height: 100px;"></div>
+                <p style="font-weight: bold; border-top: 1px solid #000; display: inline-block; padding-top: 5px;">LA DIRECTION GÉNÉRALE</p>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Configuration Supabase
     const SUPABASE_URL = "https://asewhxxlkxktjucmaknd.supabase.co";
     const SUPABASE_KEY = "sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg";
     const _client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let db = { achats: [], ventes: [], logs: [], archives: [] };
 
+    // Synchronisation
     async function sync() {
         const { data } = await _client.from('ecf_master').select('db_content').eq('id', 1).single();
         if (data) { db = data.db_content; refreshFinance(); }
@@ -187,6 +193,7 @@
         refreshFinance();
     }
 
+    // Horloge
     function updateClock() {
         const now = new Date();
         document.getElementById('real-date').innerText = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -194,6 +201,7 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
+    // Navigation
     function switchTab(id) {
         document.querySelectorAll('.tab-content, .nav-item').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -205,6 +213,7 @@
         if(id === 'encaissement') renderEncaissement();
     }
 
+    // Calculs Finance
     function refreshFinance() {
         const sorties = db.achats.reduce((a, c) => a + (Number(c.total_acq) || 0), 0);
         const entrees = db.ventes.reduce((a, c) => a + (Number(c.paye) || 0), 0) + db.logs.filter(l => l.type === 'REL').reduce((a, c) => a + (Number(c.mt) || 0), 0);
@@ -213,121 +222,175 @@
         document.getElementById('kpi-benefice').innerText = (entrees - sorties).toLocaleString() + ' FCFA';
     }
 
-    const calcAchat = () => ['a_prix', 'a_rep', 'a_trans', 'a_douane', 'a_ann'].reduce((a, id) => a + (Number(document.getElementById(id).value) || 0), 0);
-    document.querySelectorAll('.calc-achat').forEach(i => i.addEventListener('input', () => document.getElementById('total_acq').innerText = calcAchat().toLocaleString() + ' FCFA'));
+    // Calcul Auto Achat
+    const idsAchat = ['a_prix', 'a_rep', 'a_trans', 'a_douane', 'a_ann'];
+    idsAchat.forEach(id => document.getElementById(id).addEventListener('input', () => {
+        const total = idsAchat.reduce((acc, curr) => acc + (Number(document.getElementById(curr).value) || 0), 0);
+        document.getElementById('total_acq').innerText = total.toLocaleString() + ' FCFA';
+    }));
 
+    // Action Achat
     document.getElementById('formAchat').onsubmit = async (e) => {
         e.preventDefault();
+        const total = idsAchat.reduce((acc, curr) => acc + (Number(document.getElementById(curr).value) || 0), 0);
         const data = {
             id: Date.now(), marque: document.getElementById('a_marque').value, acheteur: document.getElementById('a_acheteur').value,
             prix: document.getElementById('a_prix').value, rep: document.getElementById('a_rep').value, trans: document.getElementById('a_trans').value,
-            douane: document.getElementById('a_douane').value, ann: document.getElementById('a_ann').value, total_acq: calcAchat(), vendu: false,
-            date: new Date().toLocaleDateString()
+            douane: document.getElementById('a_douane').value, ann: document.getElementById('a_ann').value, total_acq: total,
+            date: new Date().toLocaleDateString('fr-FR'), vendu: false
         };
         db.achats.push(data);
-        db.logs.push({ d: data.date, op: 'ACHAT VÉHICULE', det: data.marque, mt: data.total_acq, type: 'SORTIE' });
-        db.archives.push({ id: data.id, type: 'BORDEREAU D\'ACHAT', titre: data.marque, date: data.date, mt: data.total_acq, data: data, mode: 'ACHAT' });
-        await save(); generatePDF("BORDEREAU D'ACHAT", data, "ACHAT"); e.target.reset();
+        db.logs.push({ d: data.date, op: 'ACQUISITION STOCK', det: data.marque, mt: total, type: 'SORTIE' });
+        db.archives.push({ id: data.id, type: "BORDEREAU D'ACHAT", titre: data.marque, date: data.date, mt: total, data: data, mode: 'ACHAT' });
+        await save();
+        generatePDF("BORDEREAU D'ACHAT", data, "ACHAT");
+        e.target.reset();
+        document.getElementById('total_acq').innerText = "0 FCFA";
     };
 
+    // Action Vente
     function toggleEch() { document.getElementById('box_ech').classList.toggle('hidden', document.getElementById('v_type').value === 'soldé'); }
+    
     function renderStockDropdown() {
         const dispo = db.achats.filter(a => !a.vendu);
-        document.getElementById('v_auto').innerHTML = dispo.map(a => `<option value="${a.id}">${a.marque}</option>`).join('') || '<option value="">AUCUN STOCK</option>';
+        document.getElementById('v_auto').innerHTML = dispo.length ? dispo.map(a => `<option value="${a.id}">${a.marque}</option>`).join('') : '<option value="">AUCUN VÉHICULE DISPO</option>';
     }
 
     document.getElementById('formVente').onsubmit = async (e) => {
         e.preventDefault();
         const auto = db.achats.find(a => a.id == document.getElementById('v_auto').value);
-        const total = Number(document.getElementById('v_prix_vente').value);
-        const paye = document.getElementById('v_type').value === 'soldé' ? total : Number(document.getElementById('v_acompte').value);
+        if(!auto) return;
+        const totalV = Number(document.getElementById('v_prix_vente').value);
+        const payeV = document.getElementById('v_type').value === 'soldé' ? totalV : Number(document.getElementById('v_acompte').value);
+        
         const vente = {
             id: Date.now(), nom: document.getElementById('v_nom').value, naiss: document.getElementById('v_naiss').value, lieu: document.getElementById('v_lieu').value,
-            nat: document.getElementById('v_nat').value, prof: document.getElementById('v_prof').value, dom: document.getElementById('v_dom').value,
-            id_num: document.getElementById('v_id_num').value, id_date: document.getElementById('v_id_date').value, contact: document.getElementById('v_contact').value,
-            marque: auto.marque, total: total, paye: paye, reste: total - paye, date: document.getElementById('v_date').value, mode: document.getElementById('v_mode').value
+            nat: document.getElementById('v_nat').value, prof: document.getElementById('v_prof').value, contact: document.getElementById('v_contact').value,
+            marque: auto.marque, total: totalV, paye: payeV, reste: totalV - payeV, date: document.getElementById('v_date').value, mode: document.getElementById('v_mode').value
         };
+        
         auto.vendu = true;
         db.ventes.push(vente);
-        db.logs.push({ d: vente.date, op: 'VENTE VÉHICULE', det: vente.nom, mt: paye, type: 'ENTREE' });
-        db.archives.push({ id: vente.id, type: 'FACTURE DE VENTE', titre: vente.nom, date: vente.date, mt: vente.total, data: vente, mode: 'VENTE' });
-        await save(); generatePDF("FACTURE DE VENTE", vente, "VENTE"); e.target.reset();
+        db.logs.push({ d: vente.date, op: 'VENTE VÉHICULE', det: vente.nom, mt: payeV, type: 'ENTREE' });
+        db.archives.push({ id: vente.id, type: "FACTURE DE VENTE", titre: vente.nom, date: vente.date, mt: totalV, data: vente, mode: 'VENTE' });
+        await save();
+        generatePDF("FACTURE DE VENTE", vente, "VENTE");
+        e.target.reset();
     };
 
+    // Encaissement Reliquats
     function renderEncaissement() {
         const list = db.ventes.filter(v => v.reste > 0);
-        document.getElementById('encaisse-list').innerHTML = list.map(v => `
-            <div class="card-luxury p-6 flex justify-between items-end gap-4">
+        document.getElementById('encaisse-list').innerHTML = list.length ? list.map(v => `
+            <div class="card-luxury p-6 flex flex-wrap justify-between items-end gap-4 border-l-4 border-red-500">
                 <div class="flex-1">
-                    <p class="text-gold font-bold">${v.nom}</p>
-                    <p class="text-xs">Reste : ${v.reste.toLocaleString()} FCFA</p>
+                    <p class="text-gold font-bold text-lg uppercase">${v.nom}</p>
+                    <p class="text-xs opacity-70">VÉHICULE : ${v.marque} | RESTE : <span class="text-red-400 font-bold">${v.reste.toLocaleString()} FCFA</span></p>
                 </div>
-                <div class="flex gap-2">
-                    <div><label>Date Versement</label><input type="date" id="date_enc_${v.id}"></div>
-                    <div><label>Montant</label><input type="number" id="amt_enc_${v.id}" class="w-32"></div>
-                    <button onclick="validerEnc(${v.id})" class="btn-gold px-4 h-10 w-auto">Valider</button>
+                <div class="flex gap-4">
+                    <div><label>Date du paiement</label><input type="date" id="date_p_${v.id}" required></div>
+                    <div><label>Montant Versé</label><input type="number" id="amt_p_${v.id}" class="w-40" placeholder="0"></div>
+                    <button onclick="encaisser(${v.id})" class="btn-gold px-6 h-10 w-auto">Valider</button>
                 </div>
-            </div>`).join('') || '<p class="text-gray-500 italic">Aucun reliquat.</p>';
+            </div>`).join('') : '<p class="text-gray-500 italic text-center py-10">Aucun reliquat en attente.</p>';
     }
 
-    async function validerEnc(id) {
+    async function encaisser(id) {
         const v = db.ventes.find(x => x.id == id);
-        const mt = Number(document.getElementById(`amt_enc_${id}`).value);
-        const dt = document.getElementById(`date_enc_${id}`).value;
-        if(mt > 0 && mt <= v.reste && dt) {
-            v.paye += mt; v.reste -= mt;
-            const recu = { id: Date.now(), nom: v.nom, marque: v.marque, montant: mt, date: dt, reste: v.reste };
-            db.logs.push({ d: dt, op: 'RECOUVREMENT', det: v.nom, mt: mt, type: 'REL' });
-            db.archives.push({ id: recu.id, type: 'REÇU DE VERSEMENT', titre: v.nom, date: dt, mt: mt, data: recu, mode: 'RECU' });
-            await save(); generatePDF("REÇU DE VERSEMENT", recu, "RECU"); renderEncaissement();
-        }
+        const amt = Number(document.getElementById(`amt_p_${id}`).value);
+        const dt = document.getElementById(`date_p_${id}`).value;
+        if(!amt || amt <= 0 || !dt) return alert("Veuillez remplir la date et le montant.");
+        if(amt > v.reste) return alert("Le montant dépasse le reliquat.");
+
+        v.paye += amt; v.reste -= amt;
+        const recuData = { id: Date.now(), nom: v.nom, marque: v.marque, montant: amt, date: dt, reste_final: v.reste };
+        db.logs.push({ d: dt, op: 'RECOUVREMENT', det: v.nom, mt: amt, type: 'REL' });
+        db.archives.push({ id: recuData.id, type: "REÇU DE VERSEMENT", titre: v.nom, date: dt, mt: amt, data: recuData, mode: 'RECU' });
+        await save();
+        generatePDF("REÇU DE VERSEMENT", recuData, "RECU");
+        renderEncaissement();
     }
 
+    // GENERATION PDF AVEC MARGES 30MM
     function generatePDF(titre, data, mode) {
         document.getElementById('pdf-header-title').innerText = titre;
-        document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString();
+        document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString('fr-FR');
         let html = "";
+
         if(mode === "ACHAT") {
-            html = `<div class="pdf-section-title">Détails Acquisition</div>` +
-                   pdfRow("Véhicule", data.marque) + pdfRow("Prix Achat", data.prix, true) +
-                   pdfRow("Réparations", data.rep, true) + pdfRow("Transport", data.trans, true) +
-                   pdfRow("Douane", data.douane, true) + pdfRow("Frais Annexes", data.ann, true) +
-                   `<div class="pdf-total-row"><span>MONTANT TOTAL</span><span>${Number(data.total_acq).toLocaleString()} FCFA</span></div>`;
+            html = `<div class="pdf-section-title">Identité du Véhicule</div>` +
+                   pdfRow("Marque & Modèle", data.marque) +
+                   pdfRow("Date d'Acquisition", data.date) +
+                   pdfRow("Acheteur Responsable", data.acheteur) +
+                   `<div class="pdf-section-title">Décomposition des Frais</div>` +
+                   pdfRow("Prix d'Achat Net", data.prix, true) +
+                   pdfRow("Réparations & Remise en état", data.rep, true) +
+                   pdfRow("Frais de Transport", data.trans, true) +
+                   pdfRow("Frais de Douane / Transit", data.douane, true) +
+                   pdfRow("Frais Annexes", data.ann, true) +
+                   `<div class="pdf-total-box"><span>COÛT TOTAL DE REVIENT</span><span>${Number(data.total_acq).toLocaleString()} FCFA</span></div>`;
         } else if(mode === "VENTE") {
-            html = `<div class="pdf-section-title">Client</div>` +
-                   pdfRow("Nom", data.nom) + pdfRow("Contact", data.contact) + pdfRow("Pièce d'Identité", data.id_num) +
-                   `<div class="pdf-section-title">Transaction</div>` +
-                   pdfRow("Véhicule", data.marque) + pdfRow("Prix Vente", data.total, true) +
-                   pdfRow("Payé ce jour", data.paye, true) + pdfRow("Reste", data.reste, true);
+            html = `<div class="pdf-section-title">État Civil du Client</div>` +
+                   pdfRow("Nom & Prénom(s)", data.nom) +
+                   pdfRow("Contact Téléphonique", data.contact) +
+                   pdfRow("Né(e) le", data.naiss + " à " + data.lieu) +
+                   `<div class="pdf-section-title">Détails de la Vente</div>` +
+                   pdfRow("Véhicule", data.marque) +
+                   pdfRow("Mode de Paiement", data.mode) +
+                   pdfRow("Prix de Vente Convenu", data.total, true) +
+                   pdfRow("Montant Versé ce jour", data.paye, true) +
+                   pdfRow("Reliquat Restant", data.reste, true);
         } else if(mode === "RECU") {
-            html = `<div class="pdf-section-title">Justificatif de Versement</div>` +
-                   pdfRow("Client", data.nom) + pdfRow("Véhicule", data.marque) +
-                   pdfRow("Date Versement", data.date) + pdfRow("Somme Versée", data.montant, true) +
-                   pdfRow("Solde Restant", data.reste, true);
+            html = `<div class="pdf-section-title">Confirmation de Paiement</div>` +
+                   pdfRow("Client", data.nom) +
+                   pdfRow("Véhicule concerné", data.marque) +
+                   pdfRow("Date du Versement", data.date) +
+                   `<div style="margin:20px 0; border:1px solid #000; padding:15px; font-size:14pt; text-align:center;">SOMME REÇUE : <strong>${Number(data.montant).toLocaleString()} FCFA</strong></div>` +
+                   pdfRow("Solde restant à payer", data.reste_final, true);
         }
+
         document.getElementById('pdf-body').innerHTML = html;
-        html2pdf().from(document.getElementById('pdf-render-zone')).save(titre + '.pdf');
+        const opt = { margin: 0, filename: titre + '.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 3 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.getElementById('pdf-render-zone')).save();
     }
 
-    function pdfRow(l, v, m=false) { return `<div class="pdf-grid"><span class="pdf-lbl">${l}</span><span class="pdf-val">${m?Number(v).toLocaleString()+' FCFA':v}</span></div>`; }
+    function pdfRow(lbl, val, mt=false) {
+        return `<div class="pdf-grid"><span class="pdf-lbl">${lbl}</span><span class="pdf-val">${mt ? Number(val).toLocaleString() + " FCFA" : val}</span></div>`;
+    }
 
+    // Affichages Divers
     function renderMaster() {
-        document.getElementById('master-achats-list').innerHTML = db.achats.map(a => `<div class="p-2 border-b border-white/5 flex justify-between text-xs"><span>${a.marque}</span><span class="text-gold">${a.total_acq.toLocaleString()} FCFA</span></div>`).join('');
-        document.getElementById('master-ventes-list').innerHTML = db.ventes.map(v => `<div class="p-2 border-b border-white/5 flex justify-between text-xs"><span>${v.nom}</span><span class="font-bold">${v.total.toLocaleString()} FCFA</span></div>`).join('');
+        document.getElementById('master-achats-list').innerHTML = db.achats.map(a => `<div class="p-2 border-b border-white/5 flex justify-between text-xs"><span>${a.marque}</span><span class="text-gold font-bold">${a.total_acq.toLocaleString()}</span></div>`).join('');
+        document.getElementById('master-ventes-list').innerHTML = db.ventes.map(v => `<div class="p-2 border-b border-white/5 flex justify-between text-xs"><span>${v.nom}</span><span class="${v.reste > 0 ? 'text-red-400' : 'text-green-400'} font-bold">${v.total.toLocaleString()}</span></div>`).join('');
     }
 
-    function renderJournal() { document.getElementById('journal-body').innerHTML = db.logs.slice().reverse().map(l => `<tr><td class="p-5">${l.d}</td><td class="p-5 font-bold text-gold">${l.op}</td><td class="p-5">${l.det}</td><td class="p-5 text-right font-luxury">${l.mt.toLocaleString()}</td></tr>`).join(''); }
-    
+    function renderJournal() {
+        document.getElementById('journal-body').innerHTML = db.logs.slice().reverse().map(l => `
+            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                <td class="p-5">${l.d}</td>
+                <td class="p-5 text-gold font-bold">${l.op}</td>
+                <td class="p-5 uppercase opacity-70">${l.det}</td>
+                <td class="p-5 text-right font-bold ${l.type === 'SORTIE' ? 'text-red-400' : 'text-green-400'}">${l.mt.toLocaleString()}</td>
+            </tr>`).join('');
+    }
+
     function renderArchives() {
         document.getElementById('archives-grid').innerHTML = db.archives.slice().reverse().map(a => `
-            <div class="card-luxury p-5">
-                <span class="text-[9px] bg-gold/20 text-gold px-2 py-1 rounded font-bold uppercase">${a.type}</span>
-                <p class="font-luxury text-sm mt-3 truncate">${a.titre}</p>
-                <p class="text-gold font-bold mt-1">${a.mt.toLocaleString()} FCFA</p>
-                <button onclick='generatePDF("${a.type}", ${JSON.stringify(a.data)}, "${a.mode}")' class="mt-4 w-full border border-gold/40 py-2 text-[10px] font-bold hover:bg-gold hover:text-black transition uppercase">Réimprimer</button>
+            <div class="card-luxury p-5 flex flex-col justify-between">
+                <div>
+                    <span class="text-[9px] bg-gold/20 text-gold px-2 py-1 rounded font-bold uppercase">${a.type}</span>
+                    <p class="font-luxury text-sm mt-3 truncate">${a.titre}</p>
+                    <p class="text-xs opacity-50 mb-4">${a.date}</p>
+                </div>
+                <button onclick='reprintDoc(${JSON.stringify(a)})' class="border border-gold/50 text-[10px] py-2 hover:bg-gold hover:text-black font-bold transition">RÉIMPRIMER</button>
             </div>`).join('');
     }
 
+    function reprintDoc(archive) {
+        generatePDF(archive.type, archive.data, archive.mode);
+    }
+
+    // Initialisation
     sync();
     lucide.createIcons();
 </script>
