@@ -368,28 +368,92 @@
         await save(); generatePDF("REÇU", r, "RECU"); renderEncaissement();
     }
 
-    // PDF Engine
-    function generatePDF(titre, d, mode) {
-        document.getElementById('pdf-title').innerText = titre;
-        document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString('fr-FR');
-        let h = "";
-        if(mode === "ACHAT") {
-            h = `<div class="pdf-sec">Infos Acquisition</div>` + row("Désignation", d.marque) + row("Acheteur", d.acheteur) + row("Date", d.date) +
-                `<div class="pdf-sec">Décompte Frais</div>` + row("Achat Net", d.prix,1) + row("Réparations", d.rep,1) + row("Transport", d.trans,1) + row("Douane", d.douane,1) + row("Annexes", d.ann,1) +
-                `<div class="pdf-total">COÛT DE REVIENT : ${Number(d.total_acq).toLocaleString()} FCFA</div>`;
-        } else if(mode === "VENTE") {
-            h = `<div class="pdf-sec">Clientèle</div>` + row("Nom", d.nom) + row("Contact", d.contact) + row("Né(e) le", d.naiss + " à " + d.lieu) + row("Pièce", d.id_num) +
-                `<div class="pdf-sec">Transaction</div>` + row("Véhicule", d.marque) + row("Prix Vente", d.total,1) + row("Payé ce jour", d.paye,1) + row("Solde Restant", d.reste,1) + (d.next ? row("Prochain RDV", d.next) : "");
-        } else if(mode === "RECU") {
-            h = `<div class="pdf-sec">Encaissement</div>` + row("Client", d.nom) + row("Véhicule", d.marque) + row("Date Versement", d.date) +
-                `<div class="pdf-total">MONTANT REÇU : ${Number(d.montant).toLocaleString()} FCFA</div>` +
-                row("Reste à Payer", d.reste,1) + (d.prochain ? `<div style="color:red; margin-top:10px;">Prochain Versement : ${d.prochain}</div>` : "");
-        }
-        document.getElementById('pdf-body').innerHTML = h;
-        html2pdf().from(document.getElementById('pdf-render-zone')).save(titre + '.pdf');
-    }
-    function row(l, v, m=0) { return `<div class="pdf-row"><span>${l}</span><span style="text-align:right; font-weight:bold;">${m ? Number(v).toLocaleString()+' FCFA' : v}</span></div>`; }
+    // Remplacez votre fonction generatePDF existante par celle-ci
+function generatePDF(titre, d, mode) {
+    document.getElementById('pdf-title').innerText = titre;
+    document.getElementById('pdf-date-now').innerText = new Date().toLocaleDateString('fr-FR');
+    let h = "";
 
+    if(mode === "ACHAT") {
+        h = `
+            <div class="pdf-sec">INFORMATIONS DE L'ACQUISITION</div>
+            ${row("Désignation du Véhicule", d.marque)}
+            ${row("Responsable / Acheteur", d.acheteur)}
+            ${row("Date d'enregistrement", d.date)}
+            
+            <div class="pdf-sec">DÉTAILS DES FRAIS ENGAGÉS</div>
+            ${row("Prix d'Achat Net", d.prix, 1)}
+            ${row("Frais de Réparation", d.rep, 1)}
+            ${row("Frais de Transport", d.trans, 1)}
+            ${row("Frais de Douane", d.douane, 1)}
+            ${row("Autres Frais Annexes", d.ann, 1)}
+            
+            <div class="pdf-total">COÛT DE REVIENT TOTAL : ${Number(d.total_acq).toLocaleString()} FCFA</div>
+        `;
+    } 
+    else if(mode === "VENTE") {
+        h = `
+            <div class="pdf-sec">IDENTITÉ DU CLIENT / ACQUÉREUR</div>
+            ${row("Nom et Prénoms", d.nom)}
+            ${row("Date et Lieu de Naissance", (d.naiss || "N/A") + " à " + (d.lieu || "N/A"))}
+            ${row("Nationalité", d.nat || "N/A")}
+            ${row("Profession", d.prof || "N/A")}
+            ${row("Domicile Actuel", d.dom || "N/A")}
+            ${row("N° de Pièce d'Identité", d.id_num || "N/A")}
+            ${row("Contact Téléphonique", d.contact)}
+            
+            <div class="pdf-sec">DÉTAILS DU VÉHICULE ET TRANSACTION</div>
+            ${row("Marque / Modèle", d.marque)}
+            ${row("Date de la Vente", d.date)}
+            ${row("Mode de Règlement", d.mode)}
+            
+            <div class="pdf-sec">SITUATION FINANCIÈRE</div>
+            ${row("Prix de Vente Convenu", d.total, 1)}
+            ${row("Montant Versé ce jour", d.paye, 1)}
+            <div style="color: ${d.reste > 0 ? '#b91c1c' : '#000'}">
+                ${row("Reste à Payer (Reliquat)", d.reste, 1)}
+            </div>
+            ${d.next ? `<div style="margin-top:10px; font-weight:bold; color:#b91c1c; border:1px solid #b91c1c; padding:5px; text-align:center;">PROCHAIN RENDEZ-VOUS DE PAIEMENT : ${d.next}</div>` : ""}
+        `;
+    } 
+    else if(mode === "RECU") {
+        h = `
+            <div class="pdf-sec">REÇU DE PAIEMENT (VERSEMENT)</div>
+            ${row("Client", d.nom)}
+            ${row("Véhicule Concerné", d.marque)}
+            ${row("Date du Versement", d.date)}
+            
+            <div class="pdf-total">MONTANT REÇU : ${Number(d.montant).toLocaleString()} FCFA</div>
+            
+            <div class="pdf-sec">SITUATION DU COMPTE</div>
+            ${row("Nouveau Reste à Payer", d.reste, 1)}
+            ${d.prochain ? `<div style="margin-top:10px; font-weight:bold; color:#b91c1c;">Date prévue du prochain versement : ${d.prochain}</div>` : ""}
+        `;
+    }
+
+    document.getElementById('pdf-body').innerHTML = h;
+    
+    // Paramètres d'exportation pour une qualité optimale
+    const opt = {
+        margin: 0,
+        filename: titre + '_' + d.nom + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(document.getElementById('pdf-render-zone')).save();
+}
+
+// Fonction utilitaire pour les lignes du PDF (à vérifier si déjà présente)
+function row(label, value, isMoney = 0) {
+    const displayValue = isMoney ? Number(value).toLocaleString() + ' FCFA' : value;
+    return `
+        <div class="pdf-row">
+            <span style="color: #444;">${label} :</span>
+            <span style="text-align: right; font-weight: bold;">${displayValue}</span>
+        </div>`;
+}
     function renderJournal() { document.getElementById('journal-body').innerHTML = db.logs.slice().reverse().map(l => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-5">${l.d}</td><td class="p-5 text-gold font-bold">${l.op}</td><td class="p-5">${l.det}</td><td class="p-5 text-right font-bold ${l.type==='SORTIE'?'text-red-400':'text-green-400'}">${l.mt.toLocaleString()}</td></tr>`).join(''); }
     
     function renderArchives() {
