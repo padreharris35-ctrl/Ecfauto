@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECF - Gestion de Véhicules Importés</title>
+    <title>ECF GESTION - PREMIUM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,255 +11,374 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
         :root {
-            --noir-malt: #1e1e1f;
-            --or: #dda100;
-        }
-        body {
-            background-color: var(--noir-malt);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-        .gold-border { border: 1px solid var(--or); }
-        .gold-text { color: var(--or); }
-        .gold-bg { background-color: var(--or); color: var(--noir-malt); }
-        .gold-bg:hover { background-color: #b88600; }
-        
-        /* Animation Arrière-plan */
-        .bg-video {
-            position: fixed;
-            right: 0; bottom: 0;
-            min-width: 100%; min-height: 100%;
-            z-index: -1;
-            filter: brightness(0.2);
-            object-fit: cover;
+            --gold: #D4AF37;
+            --dark: #121212;
+            --matte: #1e1e1f;
         }
 
-        .glass-panel {
-            background: rgba(30, 30, 31, 0.85);
+        body {
+            background-color: var(--dark);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Animation de fond */
+        .bg-animate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(rgba(18,18,18,0.8), rgba(18,18,18,0.8)), 
+                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+            animation: pan 60s infinite alternate;
+        }
+
+        @keyframes pan {
+            from { background-scale: 1; background-position: left; }
+            to { background-scale: 1.1; background-position: right; }
+        }
+
+        .sidebar {
+            width: 260px;
+            background: rgba(30, 30, 31, 0.95);
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(221, 161, 0, 0.2);
+        }
+
+        .main-content {
+            height: 100vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .nav-link {
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 3px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
         }
 
         input, select {
-            background: rgba(255,255,255,0.05) !important;
-            border: 1px solid #444 !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(212, 175, 55, 0.3) !important;
             color: white !important;
-            padding: 10px !important;
+            padding: 12px !important;
+            border-radius: 8px !important;
             width: 100%;
-            margin-top: 5px;
-            border-radius: 4px;
+            margin-top: 4px;
         }
-        label { font-size: 0.9rem; color: var(--or); font-weight: bold; }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+
+        label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--dark);
+            font-weight: 700;
+            transition: transform 0.2s;
+        }
+
+        .btn-gold:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: fadeIn 0.4s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop class="bg-video">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-car-parked-in-a-dark-garage-34503-large.mp4" type="video/mp4">
-    </video>
+    <div class="bg-animate"></div>
 
-    <header class="p-6 glass-panel sticky top-0 z-50 border-b border-yellow-700/30">
-        <div class="flex justify-between items-center max-w-7xl mx-auto">
-            <div id="current-time" class="text-sm font-mono text-gray-400">
-                </div>
-            <div class="text-center">
-                <h1 class="text-3xl font-bold tracking-widest gold-text">ECF VEHICLES</h1>
-                <p class="text-xs uppercase tracking-widest text-gray-400">Import & Export Management</p>
+    <div class="flex h-screen">
+        <aside class="sidebar flex flex-col">
+            <div class="p-8">
+                <h1 class="text-2xl font-bold tracking-tighter gold-text" style="color: var(--gold)">ECF <span class="font-light text-white">GROUP</span></h1>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[3px]">Automotive Logistics</p>
             </div>
-            <div class="flex gap-6 text-right">
-                <div><p class="text-xs text-gray-400">SORTIES</p><p id="stat-sorties" class="text-red-500 font-bold">0 FCFA</p></div>
-                <div><p class="text-xs text-gray-400">ENTRÉES</p><p id="stat-entrees" class="text-green-500 font-bold">0 FCFA</p></div>
-                <div><p class="text-xs text-gray-400">BÉNÉFICE</p><p id="stat-benefice" class="gold-text font-bold">0 FCFA</p></div>
+
+            <nav class="flex-1 px-4 space-y-2">
+                <a href="#" onclick="switchTab('achat')" class="nav-link active flex items-center p-4 rounded-lg">
+                    <i data-lucide="shopping-bag" class="mr-3 w-5"></i> ACHAT
+                </a>
+                <a href="#" onclick="switchTab('vente')" class="nav-link flex items-center p-4 rounded-lg">
+                    <i data-lucide="key" class="mr-3 w-5"></i> VENTE
+                </a>
+                <a href="#" onclick="switchTab('encaissement')" class="nav-link flex items-center p-4 rounded-lg">
+                    <i data-lucide="banknote" class="mr-3 w-5"></i> ENCAISSEMENT
+                </a>
+                <a href="#" onclick="switchTab('historique')" class="nav-link flex items-center p-4 rounded-lg">
+                    <i data-lucide="clock" class="mr-3 w-5"></i> HISTORIQUE
+                </a>
+                <a href="#" onclick="switchTab('archives')" class="nav-link flex items-center p-4 rounded-lg">
+                    <i data-lucide="folder-open" class="mr-3 w-5"></i> ARCHIVES
+                </a>
+                <div class="pt-10">
+                    <a href="#" onclick="switchTab('master')" class="nav-link flex items-center p-4 rounded-lg text-red-400">
+                        <i data-lucide="shield" class="mr-3 w-5"></i> GESTION MASTER
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-6 text-[10px] text-gray-600 border-t border-white/5">
+                © 2026 ECF Cissé et Frères
             </div>
-        </div>
-    </header>
+        </aside>
 
-    <nav class="flex justify-center gap-2 p-4 bg-black/40">
-        <button onclick="showTab('achat')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20"><i data-lucide="shopping-cart"></i> ACHAT</button>
-        <button onclick="showTab('vente')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20"><i data-lucide="trending-up"></i> VENTE</button>
-        <button onclick="showTab('encaissement')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20"><i data-lucide="wallet"></i> ENCAISSEMENT</button>
-        <button onclick="showTab('historique')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20"><i data-lucide="list"></i> HISTORIQUE</button>
-        <button onclick="showTab('master')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20 text-red-400 border-red-900"><i data-lucide="shield-check"></i> GESTION MASTER</button>
-        <button onclick="showTab('archives')" class="px-4 py-2 flex items-center gap-2 gold-border rounded hover:bg-yellow-600/20"><i data-lucide="archive"></i> ARCHIVES</button>
-    </nav>
+        <main class="flex-1 main-content p-10">
+            <div class="flex justify-between items-center mb-10 card">
+                <div id="live-clock" class="text-sm font-light"></div>
+                <div class="flex gap-12">
+                    <div class="text-center">
+                        <span class="block text-[10px] text-gray-400">TOTAL SORTIES</span>
+                        <span id="stat-out" class="text-xl font-semibold text-red-400">0 FCFA</span>
+                    </div>
+                    <div class="text-center border-l border-white/10 pl-12">
+                        <span class="block text-[10px] text-gray-400">TOTAL ENTRÉES</span>
+                        <span id="stat-in" class="text-xl font-semibold text-green-400">0 FCFA</span>
+                    </div>
+                    <div class="text-center border-l border-white/10 pl-12">
+                        <span class="block text-[10px] text-gray-400">BÉNÉFICE NET</span>
+                        <span id="stat-net" class="text-xl font-semibold" style="color: var(--gold)">0 FCFA</span>
+                    </div>
+                </div>
+            </div>
 
-    <main class="max-w-7xl mx-auto p-6">
-        
-        <section id="achat" class="tab-content glass-panel p-8 rounded-lg">
-            <h2 class="text-2xl mb-6 flex items-center gap-2"><i data-lucide="plus-circle" class="gold-text"></i> Enregistrer un Achat</h2>
-            <form id="form-achat" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div><label>Marque du véhicule</label><input type="text" id="a_marque" required></div>
-                <div><label>Acheteur (Agent)</label><input type="text" id="a_acheteur" required></div>
-                <div><label>Montant du véhicule</label><input type="number" id="a_montant" required></div>
-                <div><label>Frais de réparation</label><input type="number" id="a_repa"></div>
-                <div><label>Transport</label><input type="number" id="a_transport"></div>
-                <div><label>Douane</label><input type="number" id="a_douane"></div>
-                <div><label>Frais annexe à la Douane</label><input type="number" id="a_annexe"></div>
-                <div class="md:col-span-3 mt-4">
-                    <button type="submit" class="gold-bg w-full py-3 font-bold uppercase tracking-widest">Valider l'achat et Générer Reçu</button>
+            <div id="achat" class="tab-pane active">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light">Enregistrement <span class="font-bold">Achat</span></h2>
+                </header>
+                <div class="card">
+                    <form id="form-achat" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div><label>Marque du véhicule</label><input type="text" id="a_marque" required></div>
+                        <div><label>Acheteur</label><input type="text" id="a_acheteur" required></div>
+                        <div><label>Montant du véhicule</label><input type="number" id="a_montant" required></div>
+                        <div><label>Frais de réparation</label><input type="number" id="a_repa"></div>
+                        <div><label>Transport</label><input type="number" id="a_transp"></div>
+                        <div><label>Douane</label><input type="number" id="a_douane"></div>
+                        <div><label>Frais annexes Douane</label><input type="number" id="a_annex"></div>
+                        <div class="md:col-span-3 flex justify-end pt-6">
+                            <button type="submit" class="btn-gold px-12 py-4 rounded-lg">VALIDER & GÉNÉRER PDF</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </section>
+            </div>
 
-        <section id="vente" class="tab-content glass-panel p-8 rounded-lg">
-            <h2 class="text-2xl mb-6 flex items-center gap-2"><i data-lucide="check-square" class="gold-text"></i> Enregistrer une Vente</h2>
-            <form id="form-vente" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div><label>Nom et prénoms de l'acheteur</label><input type="text" id="v_client" required></div>
-                <div><label>Date et lieu de naissance</label><input type="text" id="v_naiss" placeholder="JJ/MM/AAAA à Ville"></div>
-                <div><label>Contact</label><input type="text" id="v_contact" required></div>
-                <div><label>Nationalité</label><input type="text" id="v_nat"></div>
-                <div><label>Profession</label><input type="text" id="v_prof"></div>
-                <div><label>Domicile</label><input type="text" id="v_dom"></div>
-                <div><label>Numéro de pièce d'identité</label><input type="text" id="v_piece"></div>
-                <div><label>Date de délivrance</label><input type="date" id="v_piece_date"></div>
-                
-                <div><label>Marque de véhicule</label>
-                    <select id="v_vehicule_select" required>
-                        <option value="">-- Sélectionner un véhicule en stock --</option>
-                    </select>
+            <div id="vente" class="tab-pane">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light">Nouvelle <span class="font-bold">Vente</span></h2>
+                </header>
+                <div class="card">
+                    <form id="form-vente" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-3 border-b border-white/5 pb-2 mb-2"><h3 class="text-sm gold-text">COORDONNÉES CLIENT</h3></div>
+                        <div><label>Nom & Prénoms</label><input type="text" id="v_nom" required></div>
+                        <div><label>Date & Lieu Naissance</label><input type="text" id="v_naiss"></div>
+                        <div><label>Contact</label><input type="text" id="v_tel" required></div>
+                        <div><label>Nationalité</label><input type="text" id="v_nat"></div>
+                        <div><label>Profession</label><input type="text" id="v_prof"></div>
+                        <div><label>Domicile</label><input type="text" id="v_dom"></div>
+                        <div><label>N° Pièce</label><input type="text" id="v_id"></div>
+                        <div><label>Délivrance</label><input type="date" id="v_id_date"></div>
+                        
+                        <div class="md:col-span-3 border-b border-white/5 pb-2 mb-2 mt-4"><h3 class="text-sm gold-text">DÉTAILS VÉHICULE & TRANSACTION</h3></div>
+                        <div><label>Sélectionner Véhicule</label><select id="v_select_car" required></select></div>
+                        <div><label>Type de Vente</label>
+                            <select id="v_type" onchange="toggleEchelon(this.value)">
+                                <option value="soldé">Soldé</option>
+                                <option value="échelonné">Échelonné</option>
+                            </select>
+                        </div>
+                        <div><label>Montant Vente</label><input type="number" id="v_total" required></div>
+                        <div id="ech_1" class="hidden"><label>Acompte Versé</label><input type="number" id="v_acompte"></div>
+                        <div id="ech_2" class="hidden"><label>Date Prochain Paiement</label><input type="date" id="v_next"></div>
+                        <div><label>Mode Paiement</label>
+                            <select id="v_mode">
+                                <option>Espèce</option><option>Virement</option><option>Mobile Money</option>
+                            </select>
+                        </div>
+                        <div><label>Date de Vente</label><input type="date" id="v_date" required></div>
+                        
+                        <div class="md:col-span-3 flex justify-end pt-6">
+                            <button type="submit" class="btn-gold px-12 py-4 rounded-lg">ENREGISTRER LA VENTE</button>
+                        </div>
+                    </form>
                 </div>
-                <div><label>Type de vente</label>
-                    <select id="v_type" onchange="toggleEchelonne(this.value)" required>
-                        <option value="soldé">Soldé</option>
-                        <option value="échelonné">Échelonné</option>
-                    </select>
-                </div>
-                <div><label>Montant de la vente</label><input type="number" id="v_montant_total" required></div>
-                
-                <div id="field-echelon-1" class="hidden"><label>Montant versé ce jour</label><input type="number" id="v_verse"></div>
-                <div id="field-echelon-2" class="hidden"><label>Date du prochain paiement</label><input type="date" id="v_next_date"></div>
-                
-                <div><label>Mode de paiement</label>
-                    <select id="v_mode">
-                        <option>Espèce</option><option>Chèque</option><option>Mobile Money</option><option>Virement bancaire</option>
-                    </select>
-                </div>
-                <div><label>Date de la vente</label><input type="date" id="v_date" required></div>
+            </div>
 
-                <div class="md:col-span-3 mt-4">
-                    <button type="submit" class="gold-bg w-full py-3 font-bold uppercase tracking-widest">Enregistrer la vente et PDF</button>
+            <div id="historique" class="tab-pane">
+                <header class="mb-8 flex justify-between items-center">
+                    <h2 class="text-3xl font-light">Journal des <span class="font-bold">Activités</span></h2>
+                    <button onclick="downloadJournal()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded border border-white/10 text-xs">TÉLÉCHARGER JOURNAL (PDF)</button>
+                </header>
+                <div class="card overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-white/10 text-gray-400">
+                                <th class="p-4">DATE</th><th class="p-4">TYPE</th><th class="p-4">ÉLÉMENT</th><th class="p-4">MONTANT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body"></tbody>
+                    </table>
                 </div>
-            </form>
-        </section>
+            </div>
+
+            <div id="encaissement" class="tab-pane">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light">Suivi <span class="font-bold">Encaissements</span></h2>
+                </header>
+                <div id="encaissement-list" class="grid gap-4">
+                    </div>
+            </div>
 
         </main>
+    </div>
 
     <script>
         // CONFIGURATION SUPABASE
         const { createClient } = supabase;
-        const _supabase = createClient('https://asewhxxlkxktjucmaknd.supabase.co', 'sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg==');
+        const _client = createClient('https://asewhxxlkxktjucmaknd.supabase.co', 'sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg==');
 
-        // INITIALISATION
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            updateClock();
-            setInterval(updateClock, 1000);
-            showTab('achat');
-            loadVehiculesDisponibles();
-        });
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('current-time').innerText = now.toLocaleDateString() + ' | ' + now.toLocaleTimeString();
-        }
-
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        // NAVIGATION
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            if(tabId === 'vente') loadCars();
+            if(tabId === 'historique') loadHistory();
+            if(tabId === 'encaissement') loadEchelonnements();
         }
 
-        function toggleEchelonne(val) {
-            const f1 = document.getElementById('field-echelon-1');
-            const f2 = document.getElementById('field-echelon-2');
-            if(val === 'échelonné') {
-                f1.classList.remove('hidden'); f2.classList.remove('hidden');
-            } else {
-                f1.classList.add('hidden'); f2.classList.add('hidden');
-            }
+        // LOGIQUE AFFICHAGE ECHELON
+        function toggleEchelon(val) {
+            const display = val === 'échelonné' ? 'block' : 'none';
+            document.getElementById('ech_1').style.display = display;
+            document.getElementById('ech_2').style.display = display;
         }
 
-        // GENERATION PDF PROFESSIONNEL
-        async function generatePDF(title, data) {
+        // HEURE TEMPS RÉEL
+        function updateClock() {
+            const n = new Date();
+            document.getElementById('live-clock').innerHTML = `<span class="gold-text">${n.toLocaleDateString()}</span> - ${n.toLocaleTimeString()}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // GÉNÉRATION PDF (Standardisé pour en-tête de 30mm)
+        async function generateProPDF(title, fields) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
-            // Paramètres demandés
-            const margin = 30; // 30mm
-            const titleSize = 18;
-            const bodySize = 14;
+            const topMargin = 30;
+            const bottomMargin = 30;
 
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(titleSize);
-            doc.text(title.toUpperCase(), 105, margin + 10, { align: 'center' });
+            doc.setFontSize(18);
+            doc.setTextColor(30, 30, 31);
+            doc.text(title, 105, topMargin + 10, { align: 'center' });
 
-            // Tableau de données
-            const rows = Object.entries(data).map(([key, val]) => [key, val]);
+            const body = Object.entries(fields).map(([label, value]) => [label, value]);
 
             doc.autoTable({
-                startY: margin + 25,
-                margin: { top: margin, bottom: margin },
-                styles: { fontSize: bodySize, cellPadding: 5 },
-                headStyles: { fillColor: [30, 30, 31], textColor: [221, 161, 0] }, // Noir Malt et Or
-                body: rows,
-                theme: 'striped'
+                startY: topMargin + 25,
+                margin: { top: topMargin, bottom: bottomMargin },
+                styles: { fontSize: 14, cellPadding: 6 },
+                headStyles: { fillColor: [30, 30, 31], textColor: [212, 175, 55] },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                body: body,
             });
 
-            const fileName = `ECF_${title}_${Date.now()}.pdf`;
-            doc.save(fileName);
-            return doc.output('blob'); // Pour l'archive
+            doc.save(`ECF_${title.replace(/ /g, '_')}_${Date.now()}.pdf`);
         }
 
-        // LOGIQUE ACHAT
+        // ACHAT : Soumission
         document.getElementById('form-achat').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
-                marque: document.getElementById('a_marque').value,
-                acheteur: document.getElementById('a_acheteur').value,
-                montant_vehicule: Number(document.getElementById('a_montant').value),
-                reparation: Number(document.getElementById('a_repa').value || 0),
-                transport: Number(document.getElementById('a_transport').value || 0),
-                douane: Number(document.getElementById('a_douane').value || 0),
-                frais_annexe: Number(document.getElementById('a_annexe').value || 0),
-                date_operation: new Date().toISOString()
+            const f = e.target;
+            const total = Number(f.a_montant.value) + Number(f.a_repa.value) + Number(f.a_transp.value) + Number(f.a_douane.value) + Number(f.a_annex.value);
+            
+            const payload = {
+                marque: f.a_marque.value,
+                acheteur: f.a_acheteur.value,
+                cout_total: total,
+                details: `Achat ${f.a_marque.value}`,
+                created_at: new Date()
             };
 
-            const coutAcquisition = data.montant_vehicule + data.reparation + data.transport + data.douane + data.frais_annexe;
-            
-            // Sauvegarde Supabase
-            const { error } = await _supabase.from('achats').insert([{ ...data, cout_total: coutAcquisition }]);
-
-            if (!error) {
-                alert("Achat enregistré ! Génération du reçu...");
-                await generatePDF("REÇU D'ACHAT", {
-                    "Véhicule": data.marque,
-                    "Acquéreur": data.acheteur,
-                    "Prix Achat": data.montant_vehicule + " FCFA",
-                    "Frais Rép.": data.reparation + " FCFA",
-                    "Transport": data.transport + " FCFA",
-                    "Douane": data.douane + " FCFA",
-                    "Coût Total": coutAcquisition + " FCFA"
+            const { error } = await _client.from('achats').insert([payload]);
+            if(!error) {
+                await generateProPDF("REÇU D'ACHAT VÉHICULE", {
+                    "Marque": f.a_marque.value,
+                    "Acheteur": f.a_acheteur.value,
+                    "Prix Véhicule": f.a_montant.value + " FCFA",
+                    "Total Frais": (total - f.a_montant.value) + " FCFA",
+                    "COÛT ACQUISITION": total + " FCFA"
                 });
-                location.reload();
-            } else {
-                console.error(error);
+                alert("Achat enregistré et PDF généré.");
+                f.reset();
+                updateStats();
             }
         });
 
-        // CHARGEMENT DES VEHICULES POUR VENTE
-        async function loadVehiculesDisponibles() {
-            const { data } = await _supabase.from('achats').select('id, marque');
-            const select = document.getElementById('v_vehicule_select');
-            data?.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v.marque;
-                opt.textContent = v.marque;
-                select.appendChild(opt);
-            });
+        // CHARGEMENT VOITURES POUR VENTE
+        async function loadCars() {
+            const { data } = await _client.from('achats').select('id, marque');
+            const select = document.getElementById('v_select_car');
+            select.innerHTML = data.map(c => `<option value="${c.marque}">${c.marque}</option>`).join('');
+        }
+
+        // CHARGEMENT HISTORIQUE
+        async function loadHistory() {
+            const { data: a } = await _client.from('achats').select('*');
+            const { data: v } = await _client.from('ventes').select('*');
+            const all = [...(a||[]).map(i => ({...i, type:'ACHAT'})), ...(v||[]).map(i => ({...i, type:'VENTE'}))];
+            
+            const tbody = document.getElementById('history-body');
+            tbody.innerHTML = all.map(row => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-4">${new Date(row.created_at).toLocaleDateString()}</td>
+                    <td class="p-4 font-bold ${row.type==='ACHAT'?'text-red-400':'text-green-400'}">${row.type}</td>
+                    <td class="p-4">${row.marque || row.client}</td>
+                    <td class="p-4 font-mono">${row.cout_total || row.montant_total} FCFA</td>
+                </tr>
+            `).join('');
+        }
+
+        // STATISTIQUES
+        async function updateStats() {
+            const { data: a } = await _client.from('achats').select('cout_total');
+            const { data: v } = await _client.from('ventes').select('montant_total');
+            
+            const totalOut = (a||[]).reduce((sum, i) => sum + i.cout_total, 0);
+            const totalIn = (v||[]).reduce((sum, i) => sum + i.montant_total, 0);
+            
+            document.getElementById('stat-out').innerText = totalOut.toLocaleString() + " FCFA";
+            document.getElementById('stat-in').innerText = totalIn.toLocaleString() + " FCFA";
+            document.getElementById('stat-net').innerText = (totalIn - totalOut).toLocaleString() + " FCFA";
+        }
+
+        window.onload = () => {
+            lucide.createIcons();
+            updateStats();
         }
     </script>
 </body>
