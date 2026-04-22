@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECF | ENTREPRISE CISSE & FRERES</title>
+    <title>ECF | MASTER SYSTEM V34</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -12,77 +12,53 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600;800&display=swap');
-
-        :root { --gold: #DDA100; --malt: #1E1E1F; --black: #0A0A0A; }
-
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--black); color: #fff; margin: 0; overflow-x: hidden; }
-
-        /* Background Animation */
-        .bg-video { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; opacity: 0.15; filter: contrast(110%) brightness(60%); }
-
+        :root { --gold: #DDA100; --black: #0A0A0A; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--black); color: #fff; margin: 0; }
         .font-luxury { font-family: 'Cinzel', serif; }
-        .text-gold { color: var(--gold); }
-
+        
         /* Sidebar */
-        .sidebar { width: 340px; background: rgba(5, 5, 5, 0.98); border-right: 1px solid rgba(221, 161, 0, 0.3); position: fixed; height: 100vh; z-index: 100; }
-        .nav-link { padding: 1.4rem 2.5rem; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.4s; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #555; border-left: 5px solid transparent; letter-spacing: 2px; }
-        .nav-link:hover, .nav-link.active { color: var(--gold); border-left: 5px solid var(--gold); background: linear-gradient(90deg, rgba(221, 161, 0, 0.1), transparent); }
+        .sidebar { width: 340px; background: #050505; border-right: 1px solid rgba(221, 161, 0, 0.3); position: fixed; height: 100vh; z-index: 100; }
+        .nav-link { padding: 1.4rem 2.5rem; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.4s; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #555; border-left: 5px solid transparent; }
+        .nav-link.active { color: var(--gold); border-left: 5px solid var(--gold); background: linear-gradient(90deg, rgba(221, 161, 0, 0.1), transparent); }
 
-        /* Main Content */
-        .main-content { margin-left: 340px; padding: 60px; min-height: 100vh; }
-        .glass-panel { background: rgba(20, 20, 21, 0.96); border: 1px solid rgba(221, 161, 0, 0.15); padding: 3rem; border-radius: 4px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        /* Layout */
+        .main-content { margin-left: 340px; padding: 60px; min-height: 100vh; background: radial-gradient(circle at top right, #1a1a1a, #0a0a0a); }
+        .glass-panel { background: rgba(20, 20, 21, 0.98); border: 1px solid rgba(221, 161, 0, 0.1); padding: 3rem; border-radius: 4px; }
 
-        /* Forms */
+        /* Champs Luxueux - Vides par défaut */
         .field-box { margin-bottom: 2rem; }
         label { display: block; font-size: 11px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; }
-        
         input, select { 
             background: #000 !important; border: 1px solid #222 !important; color: #fff !important; 
-            height: 65px; padding: 0 25px !important; width: 100%; font-size: 15px; border-radius: 2px; transition: 0.3s;
+            height: 65px; padding: 0 25px !important; width: 100%; font-size: 16px; border-radius: 0; outline: none;
         }
-        input:focus { border-color: var(--gold) !important; box-shadow: 0 0 15px rgba(221, 161, 0, 0.2); outline: none; }
+        input:focus { border-color: var(--gold) !important; }
 
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; height: 65px; width: 100%; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: 0.4s; }
-        .btn-gold:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        .btn-gold { background: var(--gold); color: #000; font-weight: 900; height: 65px; width: 100%; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; border: none; }
+        
+        /* Master Edit Form */
+        .master-card { background: #111; border: 1px solid #222; padding: 25px; margin-bottom: 20px; border-left: 4px solid var(--gold); }
 
-        /* Table Design */
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #000; color: var(--gold); padding: 20px; font-size: 10px; text-transform: uppercase; text-align: left; border-bottom: 2px solid var(--gold); }
-        td { padding: 20px; font-size: 14px; border-bottom: 1px solid #1a1a1a; }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeInUp 0.5s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* PDF Engine - 30mm Margins */
-        #pdf-output { 
-            width: 210mm; background: white; color: black; 
-            padding: 30mm 20mm 30mm 20mm; position: absolute; left: -9999px; top: 0; 
-        }
+        /* PDF Engine */
+        #pdf-output { width: 210mm; background: white; color: black; padding: 30mm 20mm; position: absolute; left: -9999px; }
         .pdf-t18 { font-size: 18pt; font-family: 'Cinzel'; text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px; font-weight: bold; }
-        .pdf-t14 { font-size: 14pt; line-height: 1.8; }
-        .pdf-sub { background: #1e1e1f; color: white; padding: 8px 15px; font-weight: bold; margin-top: 20px; text-transform: uppercase; }
-        .pdf-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .pdf-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; font-size: 14pt; }
     </style>
 </head>
 <body>
 
-<video class="bg-video" autoplay muted loop playsinline>
-    <source src="https://assets.mixkit.co/videos/preview/mixkit-fast-car-driving-on-a-road-at-night-34502-large.mp4" type="video/mp4">
-</video>
-
 <div class="sidebar">
     <div class="p-10 text-center border-b border-white/5">
         <h1 class="text-5xl font-luxury text-gold tracking-widest">ECF</h1>
-        <p class="text-[10px] tracking-[3px] text-gray-400 mt-2 font-bold uppercase">Entreprise Cissé & Frères</p>
+        <p class="text-[10px] tracking-[3px] text-gray-400 mt-2 font-bold">ENTREPRISE CISSE & FRERES</p>
     </div>
     <nav class="mt-8">
-        <div onclick="switchTab('achat')" id="nav-achat" class="nav-link active"><i data-lucide="package-plus"></i> Achat</div>
-        <div onclick="switchTab('vente')" id="nav-vente" class="nav-link"><i data-lucide="shopping-bag"></i> Vente</div>
-        <div onclick="switchTab('encaissement')" id="nav-encaissement" class="nav-link"><i data-lucide="landmark"></i> Encaissement</div>
-        <div onclick="switchTab('archives')" id="nav-archives" class="nav-link"><i data-lucide="folder-search"></i> Archives</div>
-        <div onclick="switchTab('master')" id="nav-master" class="nav-link"><i data-lucide="shield-alert"></i> Gestion Master</div>
-        <div onclick="switchTab('historique')" id="nav-historique" class="nav-link"><i data-lucide="activity"></i> Historique</div>
+        <div onclick="switchTab('achat')" id="nav-achat" class="nav-link active"><i data-lucide="plus-circle"></i> Achat</div>
+        <div onclick="switchTab('vente')" id="nav-vente" class="nav-link"><i data-lucide="shopping-cart"></i> Vente</div>
+        <div onclick="switchTab('encaissement')" id="nav-encaissement" class="nav-link"><i data-lucide="wallet"></i> Encaissement</div>
+        <div onclick="switchTab('archives')" id="nav-archives" class="nav-link"><i data-lucide="archive"></i> Archives</div>
+        <div onclick="switchTab('master')" id="nav-master" class="nav-link"><i data-lucide="settings"></i> Gestion Master</div>
+        <div onclick="switchTab('historique')" id="nav-historique" class="nav-link"><i data-lucide="list"></i> Historique</div>
     </nav>
 </div>
 
@@ -92,12 +68,12 @@
             <p id="clock" class="text-xs font-bold text-gold tracking-[4px]"></p>
             <h2 id="page-head" class="text-5xl font-luxury mt-3 uppercase">Achat</h2>
         </div>
-        <div class="flex gap-8 bg-black/80 p-8 border-r-4 border-gold shadow-2xl">
-            <div class="text-right border-r border-white/10 pr-8">
+        <div class="flex gap-8 bg-black p-8 border-r-4 border-gold shadow-2xl">
+            <div class="text-right pr-8 border-r border-white/10">
                 <p class="text-[10px] font-bold text-red-500 uppercase mb-1">Sorties</p>
                 <p id="kpi-out" class="text-3xl font-luxury">0</p>
             </div>
-            <div class="text-right border-r border-white/10 pr-8">
+            <div class="text-right pr-8 border-r border-white/10">
                 <p class="text-[10px] font-bold text-green-500 uppercase mb-1">Entrées</p>
                 <p id="kpi-in" class="text-3xl font-luxury">0</p>
             </div>
@@ -110,85 +86,57 @@
 
     <section id="achat" class="tab-content active">
         <form id="formAchat" class="glass-panel grid grid-cols-2 gap-x-10">
-            <div class="field-box"><label>Marque du véhicule</label><input type="text" id="a_marque" required></div>
-            <div class="field-box"><label>Acheteur</label><input type="text" id="a_acheteur" required></div>
-            <div class="field-box"><label>Montant véhicule</label><input type="number" id="a_mt" class="calc-a" required></div>
-            <div class="field-box"><label>Réparation</label><input type="number" id="a_rep" class="calc-a" value="0"></div>
-            <div class="field-box"><label>Transport</label><input type="number" id="a_trans" class="calc-a" value="0"></div>
-            <div class="field-box"><label>Douane</label><input type="number" id="a_douane" class="calc-a" value="0"></div>
-            <div class="field-box col-span-2"><label>Frais annexe Douane</label><input type="number" id="a_ann" class="calc-a" value="0"></div>
+            <div class="field-box"><label>Marque véhicule</label><input type="text" id="a_marque" required placeholder="Ex: Toyota Land Cruiser"></div>
+            <div class="field-box"><label>Acheteur</label><input type="text" id="a_acheteur" required placeholder="Nom du responsable"></div>
+            <div class="field-box"><label>Prix d'achat</label><input type="number" id="a_mt" class="calc-a" placeholder="Montant net"></div>
+            <div class="field-box"><label>Réparations</label><input type="number" id="a_rep" class="calc-a" placeholder="Frais divers"></div>
+            <div class="field-box"><label>Transport</label><input type="number" id="a_trans" class="calc-a" placeholder="Logistique"></div>
+            <div class="field-box"><label>Douane</label><input type="number" id="a_douane" class="calc-a" placeholder="Frais douaniers"></div>
+            <div class="field-box col-span-2"><label>Frais Annexes</label><input type="number" id="a_ann" class="calc-a" placeholder="Autres frais"></div>
             <div class="col-span-2 p-10 bg-black text-center border border-gold/20 mb-8">
-                <p class="text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Total Acquisition</p>
+                <p class="text-[10px] font-bold text-gold uppercase mb-2">Coût total d'acquisition</p>
                 <p id="a_total_view" class="text-5xl font-luxury">0 FCFA</p>
             </div>
-            <button type="submit" class="btn-gold col-span-2">Enregistrer & Créer PDF</button>
+            <button type="submit" class="btn-gold col-span-2">Enregistrer le stock</button>
         </form>
     </section>
 
     <section id="vente" class="tab-content">
         <form id="formVente" class="glass-panel grid grid-cols-2 gap-x-10">
-            <div class="field-box"><label>Nom & Prénoms Acheteur</label><input type="text" id="v_nom" required></div>
-            <div class="field-box"><label>Date / Lieu Naissance</label><input type="text" id="v_birth" required></div>
+            <div class="field-box col-span-2"><label>Nom complet du client</label><input type="text" id="v_nom" required></div>
             <div class="field-box"><label>Contact</label><input type="text" id="v_tel" required></div>
             <div class="field-box"><label>Nationalité</label><input type="text" id="v_nat" required></div>
-            <div class="field-box"><label>Profession</label><input type="text" id="v_prof" required></div>
-            <div class="field-box"><label>Domicile</label><input type="text" id="v_dom" required></div>
-            <div class="field-box"><label>N° Pièce</label><input type="text" id="v_id_num" required></div>
-            <div class="field-box"><label>Délivrée le</label><input type="date" id="v_id_date" required></div>
-            <div class="field-box"><label>Véhicule</label><select id="v_stock_select" required></select></div>
-            <div class="field-box"><label>Date vente</label><input type="date" id="v_date" required></div>
-            <div class="field-box"><label>Mode</label><select id="v_mode"><option>Espèce</option><option>Chèque</option><option>Virement</option><option>Mobile Money</option></select></div>
-            <div class="field-box"><label>Type</label><select id="v_type" onchange="vEch()"><option value="soldé">SOLDÉ</option><option value="échelonné">ÉCHELONNÉ</option></select></div>
-            <div class="field-box"><label>Montant Vente</label><input type="number" id="v_mt_total" class="calc-v" required></div>
-            <div class="field-box"><label>Acompte</label><input type="number" id="v_mt_paye" class="calc-v" required></div>
-            <div id="v_ech_box" class="hidden col-span-2 grid grid-cols-2 gap-10 p-10 bg-white/5 border border-gold/20 mb-8">
-                <div class="field-box"><label>Prochain paiement</label><input type="date" id="v_next"></div>
-                <div class="text-right">
-                    <label>Reste</label>
-                    <p id="v_reste_view" class="text-4xl font-luxury text-gold">0 FCFA</p>
-                </div>
+            <div class="field-box"><label>Choisir Véhicule</label><select id="v_stock_select" required></select></div>
+            <div class="field-box"><label>Date de vente</label><input type="date" id="v_date" required></div>
+            <div class="field-box"><label>Prix de vente final</label><input type="number" id="v_mt_total" class="calc-v" required></div>
+            <div class="field-box"><label>Acompte versé</label><input type="number" id="v_mt_paye" class="calc-v" required></div>
+            <div class="col-span-2 p-8 bg-gold/5 border border-gold/20 mb-8 text-right">
+                <p class="text-xs font-bold text-gold uppercase">Reste à recouvrir</p>
+                <p id="v_reste_view" class="text-4xl font-luxury text-white">0 FCFA</p>
             </div>
-            <button type="submit" class="btn-gold col-span-2">Finaliser la Vente</button>
+            <button type="submit" class="btn-gold col-span-2">Valider la Vente</button>
         </form>
     </section>
 
-    <section id="encaissement" class="tab-content">
-        <div id="enc-list" class="space-y-6"></div>
-    </section>
-
-    <section id="archives" class="tab-content">
-        <div class="glass-panel p-0 overflow-hidden">
-            <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Nom</th><th>Action</th></tr></thead>
-                <tbody id="arch-rows"></tbody>
-            </table>
-        </div>
-    </section>
-
     <section id="master" class="tab-content">
-        <div class="mb-16">
-            <h3 class="text-2xl font-luxury text-gold mb-6 uppercase">Modifier Achats</h3>
-            <div id="master-achats-list" class="space-y-4"></div>
+        <div class="mb-10">
+            <h3 class="text-2xl font-luxury text-gold mb-6 uppercase border-b border-gold/20 pb-4">Édition complète des Achats</h3>
+            <div id="master-achat-list"></div>
         </div>
         <div>
-            <h3 class="text-2xl font-luxury text-gold mb-6 uppercase">Modifier Ventes</h3>
-            <div id="master-ventes-list" class="space-y-4"></div>
+            <h3 class="text-2xl font-luxury text-gold mb-6 uppercase border-b border-gold/20 pb-4">Édition complète des Ventes</h3>
+            <div id="master-vente-list"></div>
         </div>
     </section>
 
-    <section id="historique" class="tab-content">
-        <div class="glass-panel p-0 overflow-hidden">
-            <table>
-                <thead><tr><th>Date</th><th>Nature</th><th>Objet</th><th>Montant</th></tr></thead>
-                <tbody id="hist-rows"></tbody>
-            </table>
-        </div>
-    </section>
+    <section id="encaissement" class="tab-content"><div id="enc-list" class="space-y-4"></div></section>
+    <section id="archives" class="tab-content"><div class="glass-panel p-0 overflow-hidden"><table><thead><tr><th>Date</th><th>Type</th><th>Nom</th><th>Action</th></tr></thead><tbody id="arch-rows"></tbody></table></div></section>
+    <section id="historique" class="tab-content"><div class="glass-panel p-0 overflow-hidden"><table><thead><tr><th>Date</th><th>Nature</th><th>Objet</th><th>Montant</th></tr></thead><tbody id="hist-rows"></tbody></table></div></section>
 </main>
 
 <div id="pdf-output">
-    <div class="pdf-t18" id="pdf-title">DOCUMENT OFFICIEL</div>
-    <div id="pdf-body" class="pdf-t14"></div>
+    <div class="pdf-t18" id="pdf-title">REÇU ECF</div>
+    <div id="pdf-body"></div>
 </div>
 
 <script>
@@ -196,158 +144,177 @@
     const S_KEY = "sb_publishable_3g0qH02t0YQ7UYyXeb2Xug_PeNgVvzg";
     const sb = supabase.createClient(S_URL, S_KEY);
 
-    let store = { achats: [], ventes: [], encaissements: [], archives: [] };
+    let db = { achats: [], ventes: [], encaissements: [], archives: [] };
 
-    async function start() {
+    async function loadData() {
         const { data: ac } = await sb.from('achats').select('*').order('id', {ascending: false});
         const { data: vt } = await sb.from('ventes').select('*').order('id', {ascending: false});
         const { data: en } = await sb.from('encaissements').select('*');
         const { data: ar } = await sb.from('archives').select('*').order('id', {ascending: false});
-        store = { achats: ac||[], ventes: vt||[], encaissements: en||[], archives: ar||[] };
-        sync();
+        db = { achats: ac||[], ventes: vt||[], encaissements: en||[], archives: ar||[] };
+        refreshUI();
     }
 
-    function sync() {
-        // KPI FIX (Correction NaN)
-        const out = store.achats.reduce((s, b) => s + (Number(b.cout_total) || 0), 0);
-        const in_v = store.ventes.reduce((s, b) => s + (Number(b.montant_paye_init) || 0), 0);
-        const in_e = store.encaissements.reduce((s, b) => s + (Number(b.montant_encaisse) || 0), 0);
-        const tin = in_v + in_e;
+    function refreshUI() {
+        // KPI (Correction 0 / NaN)
+        const totalOut = db.achats.reduce((s, b) => s + (parseFloat(b.cout_total) || 0), 0);
+        const totalIn = db.ventes.reduce((s, b) => s + (parseFloat(b.montant_paye_init) || 0), 0) + 
+                        db.encaissements.reduce((s, b) => s + (parseFloat(b.montant_encaisse) || 0), 0);
 
-        document.getElementById('kpi-out').innerText = out.toLocaleString();
-        document.getElementById('kpi-in').innerText = tin.toLocaleString();
-        document.getElementById('kpi-profit').innerText = (tin - out).toLocaleString();
+        document.getElementById('kpi-out').innerText = totalOut.toLocaleString();
+        document.getElementById('kpi-in').innerText = totalIn.toLocaleString();
+        document.getElementById('kpi-profit').innerText = (totalIn - totalOut).toLocaleString();
 
-        renderUI();
+        // Renders
+        document.getElementById('v_stock_select').innerHTML = db.achats.filter(a => !a.vendu).map(a => `<option value="${a.id}">${a.marque}</option>`).join('') || '<option disabled>Aucun stock</option>';
+        
+        // MASTER ACHAT (FULL EDIT)
+        document.getElementById('master-achat-list').innerHTML = db.achats.map(a => `
+            <div class="master-card grid grid-cols-3 gap-4">
+                <div><label>Marque</label><input type="text" id="edit_am_${a.id}" value="${a.marque}"></div>
+                <div><label>Acheteur</label><input type="text" id="edit_aa_${a.id}" value="${a.acheteur}"></div>
+                <div><label>Coût Total (FCFA)</label><input type="number" id="edit_ac_${a.id}" value="${a.cout_total}"></div>
+                <div class="col-span-3 flex justify-end gap-4 mt-2">
+                    <button onclick="deleteRow('achats', ${a.id})" class="text-red-500 text-xs uppercase font-bold">Supprimer</button>
+                    <button onclick="saveEditAchat(${a.id})" class="bg-gold text-black px-6 py-2 font-bold text-xs">Mettre à jour intégralement</button>
+                </div>
+            </div>
+        `).join('');
+
+        // MASTER VENTE (FULL EDIT)
+        document.getElementById('master-vente-list').innerHTML = db.ventes.map(v => `
+            <div class="master-card grid grid-cols-3 gap-4">
+                <div><label>Client</label><input type="text" id="edit_vn_${v.id}" value="${v.nom}"></div>
+                <div><label>Prix Vente</label><input type="number" id="edit_vm_${v.id}" value="${v.montant_vente}"></div>
+                <div><label>Acompte</label><input type="number" id="edit_vp_${v.id}" value="${v.montant_paye_init}"></div>
+                <div class="col-span-3 flex justify-end gap-4 mt-2">
+                    <button onclick="deleteRow('ventes', ${v.id})" class="text-red-500 text-xs uppercase font-bold">Annuler Vente</button>
+                    <button onclick="saveEditVente(${v.id})" class="bg-gold text-black px-6 py-2 font-bold text-xs">Mettre à jour intégralement</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Archives & Historique (Simple Renders)
+        document.getElementById('arch-rows').innerHTML = db.archives.map(a => `<tr><td>${new Date(a.created_at).toLocaleDateString()}</td><td class="text-gold font-bold">${a.type_doc}</td><td>${a.nom_fichier}</td><td><button onclick='printPDF("${a.type_doc}", ${JSON.stringify(a.data_json)})' class="underline text-xs">Re-imprimer</button></td></tr>`).join('');
+        const hist = [...db.achats.map(x=>({d:x.created_at, n:'ACHAT', o:x.marque, m:x.cout_total})), ...db.ventes.map(x=>({d:x.created_at, n:'VENTE', o:x.nom, m:x.montant_paye_init}))].sort((a,b)=>new Date(b.d)-new Date(a.d));
+        document.getElementById('hist-rows').innerHTML = hist.map(x => `<tr><td>${new Date(x.d).toLocaleDateString()}</td><td class="text-gold font-bold">${x.n}</td><td>${x.o}</td><td>${(parseFloat(x.m)||0).toLocaleString()} FCFA</td></tr>`).join('');
+    
+        // Encaissements
+        document.getElementById('enc-list').innerHTML = db.ventes.filter(v => v.montant_restant > 0).map(v => `
+            <div class="glass-panel flex justify-between items-center border-l-4 border-gold">
+                <div><p class="font-luxury text-gold text-2xl">${v.nom}</p><p class="text-xs opacity-50 mt-2">RESTANT : ${v.montant_restant.toLocaleString()} FCFA</p></div>
+                <div class="flex gap-4"><input type="number" id="pay_${v.id}" class="w-48" placeholder="Somme"><button onclick="collect(${v.id})" class="btn-gold !h-[65px] px-8 !w-auto">Encaisser</button></div>
+            </div>
+        `).join('');
     }
 
-    // Calculs instantanés
-    document.querySelectorAll('.calc-a').forEach(i => i.oninput = () => {
-        const t = ['a_mt','a_rep','a_trans','a_douane','a_ann'].reduce((s,id)=>s+(Number(document.getElementById(id).value)||0),0);
-        document.getElementById('a_total_view').innerText = t.toLocaleString() + ' FCFA';
-    });
-    document.querySelectorAll('.calc-v').forEach(i => i.oninput = () => {
-        const r = (Number(document.getElementById('v_mt_total').value)||0) - (Number(document.getElementById('v_mt_paye').value)||0);
-        document.getElementById('v_reste_view').innerText = r.toLocaleString() + ' FCFA';
-    });
-    function vEch() { document.getElementById('v_ech_box').classList.toggle('hidden', document.getElementById('v_type').value === 'soldé'); }
+    // --- LOGIQUE DE CALCULS CORRIGÉE ---
+    function computeAchat() {
+        const ids = ['a_mt','a_rep','a_trans','a_douane','a_ann'];
+        const total = ids.reduce((s, id) => s + (parseFloat(document.getElementById(id).value) || 0), 0);
+        document.getElementById('a_total_view').innerText = total.toLocaleString() + ' FCFA';
+        return total;
+    }
+    document.querySelectorAll('.calc-a').forEach(el => el.oninput = computeAchat);
 
-    // Enregistrements
+    function computeVente() {
+        const prix = parseFloat(document.getElementById('v_mt_total').value) || 0;
+        const paye = parseFloat(document.getElementById('v_mt_paye').value) || 0;
+        const reste = prix - paye;
+        document.getElementById('v_reste_view').innerText = reste.toLocaleString() + ' FCFA';
+        return reste;
+    }
+    document.querySelectorAll('.calc-v').forEach(el => el.oninput = computeVente);
+
+    // --- ACTIONS BASE DE DONNÉES ---
     document.getElementById('formAchat').onsubmit = async (e) => {
         e.preventDefault();
-        const t = ['a_mt','a_rep','a_trans','a_douane','a_ann'].reduce((s,id)=>s+(Number(document.getElementById(id).value)||0),0);
-        const d = {
-            marque: document.getElementById('a_marque').value, acheteur: document.getElementById('a_acheteur').value,
-            montant_vehicule: Number(document.getElementById('a_mt').value), frais_rep: Number(document.getElementById('a_rep').value),
-            transport: Number(document.getElementById('a_trans').value), douane: Number(document.getElementById('a_douane').value),
-            frais_annexe_douane: Number(document.getElementById('a_ann').value), cout_total: t
+        const total = computeAchat();
+        const row = {
+            marque: document.getElementById('a_marque').value,
+            acheteur: document.getElementById('a_acheteur').value,
+            montant_vehicule: parseFloat(document.getElementById('a_mt').value) || 0,
+            frais_rep: parseFloat(document.getElementById('a_rep').value) || 0,
+            transport: parseFloat(document.getElementById('a_trans').value) || 0,
+            douane: parseFloat(document.getElementById('a_douane').value) || 0,
+            frais_annexe_douane: parseFloat(document.getElementById('a_ann').value) || 0,
+            cout_total: total
         };
-        const { data: res } = await sb.from('achats').insert([d]).select();
-        await archPrint("BORDEREAU D'ACHAT", "ACHAT", res[0]);
-        e.target.reset(); start();
+        const { data } = await sb.from('achats').insert([row]).select();
+        await sb.from('archives').insert([{ type_doc:'ACHAT', nom_fichier:row.marque, data_json:data[0] }]);
+        e.target.reset(); computeAchat(); loadData();
     };
 
     document.getElementById('formVente').onsubmit = async (e) => {
         e.preventDefault();
-        const r = (Number(document.getElementById('v_mt_total').value)||0) - (Number(document.getElementById('v_mt_paye').value)||0);
-        const d = {
-            nom: document.getElementById('v_nom').value, contact: document.getElementById('v_tel').value,
-            nationalite: document.getElementById('v_nat').value, profession: document.getElementById('v_prof').value,
-            domicile: document.getElementById('v_dom').value, num_piece: document.getElementById('v_id_num').value,
-            id_achat: document.getElementById('v_stock_select').value, type_vente: document.getElementById('v_type').value,
-            montant_vente: Number(document.getElementById('v_mt_total').value), montant_paye_init: Number(document.getElementById('v_mt_paye').value),
-            montant_restant: r, date_vente: document.getElementById('v_date').value, mode_paiement: document.getElementById('v_mode').value
+        const reste = computeVente();
+        const row = {
+            nom: document.getElementById('v_nom').value,
+            contact: document.getElementById('v_tel').value,
+            nationalite: document.getElementById('v_nat').value,
+            id_achat: document.getElementById('v_stock_select').value,
+            date_vente: document.getElementById('v_date').value,
+            montant_vente: parseFloat(document.getElementById('v_mt_total').value) || 0,
+            montant_paye_init: parseFloat(document.getElementById('v_mt_paye').value) || 0,
+            montant_restant: reste
         };
-        const { data: res } = await sb.from('ventes').insert([d]).select();
-        await sb.from('achats').update({vendu: true}).eq('id', d.id_achat);
-        await archPrint("FACTURE DE VENTE", "VENTE", res[0]);
-        e.target.reset(); start();
+        const { data } = await sb.from('ventes').insert([row]).select();
+        await sb.from('achats').update({vendu:true}).eq('id', row.id_achat);
+        await sb.from('archives').insert([{ type_doc:'VENTE', nom_fichier:row.nom, data_json:data[0] }]);
+        e.target.reset(); computeVente(); loadData();
     };
 
-    async function archPrint(t, tp, d) {
-        await sb.from('archives').insert([{ nom_fichier: d.marque || d.nom, type_doc: tp, data_json: d }]);
-        makePDF(t, d);
+    // --- MASTER ACTIONS ---
+    async function saveEditAchat(id) {
+        const update = {
+            marque: document.getElementById('edit_am_'+id).value,
+            acheteur: document.getElementById('edit_aa_'+id).value,
+            cout_total: parseFloat(document.getElementById('edit_ac_'+id).value) || 0
+        };
+        await sb.from('achats').update(update).eq('id', id);
+        loadData();
     }
 
-    function makePDF(t, d) {
-        document.getElementById('pdf-title').innerText = t;
-        let h = `<div class="pdf-sub">Données de l'opération</div>`;
-        for (let [k, v] of Object.entries(d)) {
-            if (['id', 'created_at', 'vendu', 'id_achat'].includes(k)) continue;
-            h += `<div class="pdf-row"><span style="font-weight:bold">${k.toUpperCase()}</span><span>${typeof v === 'number' ? v.toLocaleString() : v}</span></div>`;
+    async function saveEditVente(id) {
+        const update = {
+            nom: document.getElementById('edit_vn_'+id).value,
+            montant_vente: parseFloat(document.getElementById('edit_vm_'+id).value) || 0,
+            montant_paye_init: parseFloat(document.getElementById('edit_vp_'+id).value) || 0
+        };
+        // Recalcul du montant restant automatiquement lors de la modification
+        update.montant_restant = update.montant_vente - update.montant_paye_init;
+        await sb.from('ventes').update(update).eq('id', id);
+        loadData();
+    }
+
+    async function deleteRow(table, id) {
+        if(confirm("Voulez-vous vraiment supprimer cet enregistrement ?")) {
+            await sb.from(table).delete().eq('id', id);
+            loadData();
         }
-        document.getElementById('pdf-body').innerHTML = h;
-        setTimeout(() => {
-            const el = document.getElementById('pdf-output');
-            html2pdf().from(el).set({ margin:0, filename: t+'.pdf', html2canvas:{scale:2}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} }).save();
-        }, 800);
     }
 
-    // Gestion Master (Modification Intégrale)
-    async function masterEditAchat(id) {
-        const d = {
-            marque: document.getElementById('m_am_'+id).value,
-            cout_total: Number(document.getElementById('m_ac_'+id).value)
-        };
-        await sb.from('achats').update(d).eq('id', id);
-        start();
-    }
-
-    async function masterEditVente(id) {
-        const d = {
-            nom: document.getElementById('m_vn_'+id).value,
-            montant_vente: Number(document.getElementById('m_vm_'+id).value)
-        };
-        await sb.from('ventes').update(d).eq('id', id);
-        start();
-    }
-
-    function renderUI() {
-        // Stock
-        document.getElementById('v_stock_select').innerHTML = store.achats.filter(a => !a.vendu).map(a => `<option value="${a.id}">${a.marque}</option>`).join('') || '<option>Vide</option>';
-        
-        // Archives
-        document.getElementById('arch-rows').innerHTML = store.archives.map(a => `<tr><td>${new Date(a.created_at).toLocaleDateString()}</td><td class="text-gold font-bold">${a.type_doc}</td><td>${a.nom_fichier}</td><td><button onclick='makePDF("${a.type_doc}", ${JSON.stringify(a.data_json)})' class="underline text-xs">Ouvrir</button></td></tr>`).join('');
-
-        // Master List
-        document.getElementById('master-achats-list').innerHTML = store.achats.map(a => `
-            <div class="glass-panel !p-6 flex gap-4 items-end">
-                <div class="flex-1"><label>Marque</label><input type="text" id="m_am_${a.id}" value="${a.marque}"></div>
-                <div class="flex-1"><label>Coût Total</label><input type="number" id="m_ac_${a.id}" value="${a.cout_total}"></div>
-                <button onclick="masterEditAchat(${a.id})" class="btn-gold !h-[65px] px-8 !w-auto">Update</button>
-            </div>
-        `).join('');
-
-        document.getElementById('master-ventes-list').innerHTML = store.ventes.map(v => `
-            <div class="glass-panel !p-6 flex gap-4 items-end">
-                <div class="flex-1"><label>Client</label><input type="text" id="m_vn_${v.id}" value="${v.nom}"></div>
-                <div class="flex-1"><label>Prix Vente</label><input type="number" id="m_vm_${v.id}" value="${v.montant_vente}"></div>
-                <button onclick="masterEditVente(${v.id})" class="btn-gold !h-[65px] px-8 !w-auto">Update</button>
-            </div>
-        `).join('');
-
-        // Encaissements
-        document.getElementById('enc-list').innerHTML = store.ventes.filter(v => v.montant_restant > 0).map(v => `
-            <div class="glass-panel flex justify-between items-center border-l-4 border-gold">
-                <div><p class="font-luxury text-gold text-2xl">${v.nom}</p><p class="text-xs opacity-50 uppercase mt-2">Dette : ${v.montant_restant.toLocaleString()} FCFA</p></div>
-                <div class="flex gap-4"><input type="number" id="val_${v.id}" class="w-48" placeholder="Somme"><button onclick="doEnc(${v.id})" class="btn-gold !h-[65px] px-8 !w-auto">Valider</button></div>
-            </div>
-        `).join('');
-
-        // Historique
-        const h = [...store.achats.map(x=>({d:x.created_at, n:'ACHAT', o:x.marque, m:x.cout_total})), 
-                   ...store.ventes.map(x=>({d:x.created_at, n:'VENTE', o:x.nom, m:x.montant_paye_init}))].sort((a,b)=>new Date(b.d)-new Date(a.d));
-        document.getElementById('hist-rows').innerHTML = h.map(x => `<tr><td>${new Date(x.d).toLocaleDateString()}</td><td class="text-gold font-bold">${x.n}</td><td>${x.o}</td><td>${(x.m||0).toLocaleString()} FCFA</td></tr>`).join('');
-    }
-
-    async function doEnc(id) {
-        const v = store.ventes.find(x => x.id === id);
-        const val = Number(document.getElementById('val_'+id).value);
+    async function collect(id) {
+        const v = db.ventes.find(x => x.id === id);
+        const val = parseFloat(document.getElementById('pay_'+id).value) || 0;
         if(val > 0 && val <= v.montant_restant) {
             await sb.from('encaissements').insert([{ id_vente: id, montant_encaisse: val }]);
             await sb.from('ventes').update({ montant_restant: v.montant_restant - val }).eq('id', id);
-            start();
+            loadData();
         }
+    }
+
+    function printPDF(t, d) {
+        document.getElementById('pdf-title').innerText = t;
+        let html = ``;
+        for (let [k, v] of Object.entries(d)) {
+            if(['id','created_at','vendu','id_achat'].includes(k)) continue;
+            html += `<div class="pdf-row"><span style="font-weight:bold">${k.toUpperCase()}</span><span>${v}</span></div>`;
+        }
+        document.getElementById('pdf-body').innerHTML = html;
+        setTimeout(() => {
+            html2pdf().from(document.getElementById('pdf-output')).set({ margin:0, filename: t+'.pdf', html2canvas:{scale:2}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} }).save();
+        }, 500);
     }
 
     function switchTab(id) {
@@ -355,11 +322,11 @@
         document.getElementById(id).classList.add('active');
         document.getElementById('nav-'+id).classList.add('active');
         document.getElementById('page-head').innerText = document.getElementById('nav-'+id).innerText;
-        start();
+        loadData();
     }
 
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
-    start(); lucide.createIcons();
+    loadData(); lucide.createIcons();
 </script>
 
 </body>
