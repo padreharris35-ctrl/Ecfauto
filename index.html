@@ -93,10 +93,13 @@
                 <h2 class="text-3xl font-luxury mb-8">Acquisition Véhicule</h2>
                 <form id="formAchat" class="card-luxury p-8 space-y-6">
                     <div class="grid grid-cols-2 gap-6">
-                        <div><label>Modèle / Désignation</label><input type="text" id="a_marque" required></div>
-                        <div><label>Responsable Achat</label><input type="text" id="a_acheteur" value="ENTREPRISES CISSÉ ET FRÈRES"></div>
-                    </div>
+                       <div class="grid grid-cols-3 gap-6">
+    <div><label>Modèle / Désignation</label><input type="text" id="a_marque" required></div>
+    <div><label>Responsable Achat</label><input type="text" id="a_acheteur" value="ENTREPRISES CISSÉ ET FRÈRES"></div>
+    <div><label>Date de l'Achat</label><input type="date" id="a_date_achat" required></div>
+</div>
                     <div class="grid grid-cols-3 gap-6">
+                        <div class="grid grid-cols-3 gap-6">
                         <div><label>Achat Net (FCFA)</label><input type="number" id="a_prix" class="calc-acq" value="0"></div>
                         <div><label>Réparations</label><input type="number" id="a_rep" class="calc-acq" value="0"></div>
                         <div><label>Transport</label><input type="number" id="a_trans" class="calc-acq" value="0"></div>
